@@ -1,0 +1,104 @@
+function listBooks(){
+    $.ajax({
+        url: "/book/books_table/",
+        type: "get",
+        dataType: "json",
+        success: function(response){
+            if ($.fn.DataTable.isDataTable('#books_table')){
+                $('#books_table').DataTable().destroy();
+            }
+            $('#books_table tbody').html("");
+            for (let i = 0;i < response.length;i++){
+                let row = '<tr>';
+                row += '<td>' + (i + 1) + '</td>';
+                row += '<td>' + response[i]['fields']['titleBook'] + '</td>';
+                row += '<td>' + response[i]['fields']['publicationDateBook'] + '</td>';
+                row += '<td>' + response[i]['fields']['authorId'] + '</td>';
+                row += '<td>' + response[i]['fields']['createDateBook'] + '</td>';
+                row += '<td>' + response[i]['fields']['updateDateBook'] + '</td>';
+                row += '<td>';
+                row += '<button class="btn btn-primary"';
+                row += ' onclick="open_modal_edition(\'/book/update_book/' + response[i]['pk'] + '/\');">';
+                row += '<i class="fa fa-pencil"></i> Edit</button>';
+                row += ' <button class="btn btn-danger"';
+                row += ' onclick="open_modal_elimination(\'/book/delete_book/' + response[i]['pk'] + '/\');">';
+                row += '<i class="fa fa-eraser"></i> Delete</button>';
+                row += '</td>';
+                row += '</tr>';
+                $('#books_table tbody').append(row);
+            }
+            $('#books_table').DataTable({});
+        },
+        error: function(error){
+            console.log(error);
+        }
+    });
+}
+
+function register(){
+    activeButtonCreation();
+    var data = new FormData($('#form_creation').get(0));
+	$.ajax({
+		url: $('#form_creation').attr('action'),
+		type: $('#form_creation').attr('method'),
+        data: data,
+        cache: false,
+        processData: false,
+        contentType: false,
+		success: function(response){
+            successNotification(response.message);
+			listBooks();
+            close_modal_creation();
+		},
+		error: function(error){
+            errorNotification(error.responseJSON.message);
+			showCreationErrors(error);
+            activeButtonCreation();
+		}
+	});
+}
+
+function edition(){
+    activeButtonEdition();
+    var data = new FormData($('#form_edition').get(0));
+    $.ajax({
+        url: $('#form_edition').attr('action'),
+        type: $('#form_edition').attr('method'),
+        data: data,
+        cache: false,
+        processData: false,
+        contentType: false,
+        success: function(response){
+            successNotification(response.message);
+            listBooks();
+            close_modal_edition();
+        },
+        error: function(error){
+            errorNotification(error.responseJSON.message);
+            showEditionErrors(error);
+            activeButtonEdition();
+        }
+    });
+}
+
+function elimination(pk){
+    $.ajax({
+        data: {
+            csrfmiddlewaretoken: $("[name='csrfmiddlewaretoken']").val()
+        },
+        url: '/book/delete_book/'+ pk +'/',
+        type: 'post',
+        success: function(response){
+            successNotification(response.message);
+            listBooks();
+            close_modal_elimination();
+        },
+        error: function(error){
+            errorNotification(error.responseJSON.message);
+        }
+    });
+}
+
+$(document).ready(function(){
+    listBooks();
+});

@@ -1,0 +1,50 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %}
+    Available Books
+{% endblock title %}
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <div class="card-title">
+                        Available Books
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                {% for book in object_list %}
+                    <div class="col-md-4">
+                        <a href="{% url 'book:available_book_detail' book.pk %}">
+                            <div class="card">
+                                <img src="{{ book.imageBook.url }}" alt="" class="card-img-top">
+                                <div class="card-body">
+                                    <h4 class="card-title mb-3">{{ book.titleBook }}</h4>
+                                    <p class="card-text">{{ book.descriptionBook }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; Firt</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                {% endif %}
+                <span class="current">
+                    Pagine {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                    <a href="?page={{ paginator_obj.paginator.num_pages }}">Latest &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+{% endblock content %}

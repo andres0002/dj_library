@@ -1,0 +1,20 @@
+<div class="modal-dialog modals-default">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="card-header text-center">
+                <strong class="card-title">Delete User: {{ object }}</strong>
+                <button class="close" type="button" data-dismiss="modal" aria-label="close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+        <div class="modal-body text-center">
+            {% csrf_token %}
+            <h3><strong>Confirm user elimination: {{ object }}?</strong></h3>
+        </div>
+        <div class="modal-footer">
+            <button id="button_elimination" class="btn btn-primary" type="button" onclick="elimination({{ object.pk }});">Confirm</button>
+            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+        </div>
+    </div>
+</div>

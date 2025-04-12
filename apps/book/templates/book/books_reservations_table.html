@@ -1,0 +1,54 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %}
+    List Books
+{% endblock title %}
+{% block css_strass %}
+    <link rel="stylesheet" href="{% static 'css/lib/datatable/dataTables.bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'fullcalendar/lib/main.css' %}">
+{% endblock css_strass %}
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            <h2><strong class="card-title">Books Reservations</strong></h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="calendar" class="card" style="padding: 20px;"></div>
+    </div>
+{% endblock content %}
+{% block js_strass %}
+    <script src="{% static 'js/lib/data-table/datatables.min.js' %}"></script>
+    <script src="{% static 'js/lib/data-table/dataTables.bootstrap.min.js' %}"></script>
+    <script src="{% static 'fullcalendar/lib/main.js' %}"></script>
+    <script src="{% static 'fullcalendar/lib/locales-all.js' %}"></script>
+    <script src="{% static 'js/book/reservation/index.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            var calendarUI = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarUI, {
+                headerToolbar: {
+                    left: 'prev, next today',
+                    center: 'title',
+                },
+                events: [
+                    {% for reservation in object_list %}
+                        {
+                            title: "{{ reservation.book }}",
+                            start: "{{ reservation.createDate | date:'Y-m-d' }}",
+                            end: "{{ reservation.expirationDate | date:'Y-m-d' }}"
+                        },
+                    {% endfor %}
+                ]
+            });
+            calendar.render();
+            /*calendar.setOption('locale', 'es');*/
+        });
+    </script>
+{% endblock js_strass %}

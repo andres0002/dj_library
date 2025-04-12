@@ -1,0 +1,18 @@
+Firt form of return json with Django.
+if (request.is_ajax()):
+    list_user = []
+    for user in self.get_queryset():
+        data_user = {}
+        data_user['id'] = user.id
+        data_user['name'] = user.name
+        data_user['lastname'] = user.lastname
+        data_user['email'] = user.email
+        data_user['username'] = user.username
+        data_user['active_user']= user.active_user
+        list_user.append(data_user)
+    data = json.dumps(list_user)
+    return HttpResponse(data, 'application/json')
+
+Second form of return json with Django.
+if (request.is_ajax()):
+    return HttpResponse(serialize('json', self.get_queryset()), 'application/json')

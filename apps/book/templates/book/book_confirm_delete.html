@@ -1,0 +1,23 @@
+{% extends 'index.html' %}
+{% block title %}
+    Delete Book
+{% endblock title %}
+{% block content %}
+    <div class="card">
+        <div class="card-header text-center"><strong class="card-title">Delete Book</strong></div>
+        <div class="card-body card-block">
+            <form action="#" method="POST" enctype="multipart/form-data" class="form-horizontal">
+                {% csrf_token %}
+                <p class="text-center"><strong>You want to delete "{{ object }}"?</strong></p>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Delete Book</button>
+                    <button type="reset" class="btn btn-danger">
+                        <a href="{% url 'book:listBooks' %}" style="color: white;">
+                            Cancel
+                        </a>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

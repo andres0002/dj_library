@@ -1,0 +1,78 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %}
+    Available Book Detail
+{% endblock title %}
+{% block content %}
+    <div class="card" style="color: black; float: center;">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <strong class="card-title">
+                        <h2>{{ object }}</h2>
+                    </strong>
+                </div>
+            </div>
+        </div>
+        <div class="container text-center">
+            <div class="row">
+                <div class="card">
+                    {% csrf_token %}
+                    <img src="{{ object.imageBook.url }}" alt="" class="card-img-top">
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-6">
+                                <p class="card-text">
+                                    <strong>Date of Publication of the Book: </strong>{{ object.publicationDateBook }}
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="card-text">
+                                    <strong>Authors: </strong>{{ object.get_authorId }}
+                                </p>
+                            </div>
+                            <div class="col-md-12">
+                                <p class="card-text text-center">
+                                    <strong>Book Description</strong>
+                                </p>
+                            </div>
+                            <div class="col-md-12">
+                                <p class="card-text text-center">
+                                    {{ object.descriptionBook }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-primary btn-lg" onclick="reservationRegister();">
+                        Book Reservation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block js_strass %}
+    <script type="text/javascript">
+        function reservationRegister(){
+            var data = {
+                'user': "{{ request.user.id }}",
+                'book': "{{ object.id }}",
+                csrfmiddlewaretoken: $("[name='csrfmiddlewaretoken']").val()
+            }
+            $.ajax({
+                data: data,
+                url: "{% url 'book:book_reservation' %}",
+                type: 'POST',
+                success: function(response){
+                    successNotification(response.message);
+                    window.location.href = response.url;
+                },
+                error: function(error){
+                    errorNotification(error.responseJSON.message);
+                }
+            });
+        }
+    </script>
+{% endblock js_strass %}
