@@ -83,5 +83,5 @@ PORT_PRD = port_db
 ### -> py manage.py show_urls
 ## 12. Ejecutar el proyecto.
 ### -> py manage.py runserver
-## 14. Desativar el venv.
+## 13. Desativar el venv.
 ### -> deactivate
