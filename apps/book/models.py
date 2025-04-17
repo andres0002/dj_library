@@ -16,7 +16,7 @@ class Author(models.Model):
     imageAuthor = models.ImageField(upload_to='book/authors/images/', max_length=255, null=True, blank=True)
     createDateAuthor = models.DateTimeField(auto_now_add=True)
     updateDateAuthor = models.DateTimeField(auto_now=True)
-    
+
     def clean(self):
         """You can add validations here.
         """
@@ -26,6 +26,7 @@ class Author(models.Model):
         """[You can add validations here.]
         """
         super(Author, self).save(*args, **kwargs)
+
     class Meta:
         verbose_name = 'Author'
         verbose_name_plural = 'Authors'

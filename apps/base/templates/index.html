@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.0/css/flag-icon.min.css">
     <link rel="stylesheet" href="{% static 'css/cs-skin-elastic.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/loader.css' %}">
     <!-- css strass -->
     {% block css_strass %}
     {% endblock css_strass %}
@@ -59,7 +60,13 @@
                     {% endif %}
                     <li class="menu-item-has-children dropdown">
                         <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false"> <i class="menu-icon fa fa-book"></i>Books</a>
+                            aria-expanded="false"> <i class="menu-icon fa fa-book"></i>
+                            {% if request.user.is_superuser %}
+                                Books Reservation
+                            {% else %}
+                                Books
+                            {% endif %}
+                        </a>
                         <ul class="sub-menu children dropdown-menu">
                             <li><i class="menu-icon fa fa-list"></i><a href="{% url 'book:available_books' %}">Available
                                     Books</a></li>
@@ -165,6 +172,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/loader.js' %}"></script>
     <script>
         {% if messages %}
         var html_message = ''
@@ -178,6 +186,18 @@
     {% block js_strass %}
     {% endblock js_strass %}
     <!-- end js strass -->
+    <!-- Modal de error -->
+    <div id="modal-overlay">
+        <div id="modal">
+            <h2 class="modal-title">Error</h2>
+            <p id="modal-message">Ha ocurrido un error inesperado.</p>
+            <button class="modal-btn-close" onclick="closeErrorModal()">Cerrar</button>
+        </div>
+    </div>
+    <!-- Loader justo antes de cerrar </body> -->
+    <div class="loader-overlay" id="loader">
+        <div class="loader"></div>
+    </div>
 </body>
 
 </html>

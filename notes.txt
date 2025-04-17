@@ -1,5 +1,5 @@
 Firt form of return json with Django.
-if (request.is_ajax()):
+if is_ajax(request):
     list_user = []
     for user in self.get_queryset():
         data_user = {}
@@ -14,5 +14,5 @@ if (request.is_ajax()):
     return HttpResponse(data, 'application/json')
 
 Second form of return json with Django.
-if (request.is_ajax()):
+if is_ajax(request):
     return HttpResponse(serialize('json', self.get_queryset()), 'application/json')

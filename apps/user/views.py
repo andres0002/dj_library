@@ -15,6 +15,7 @@ from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from apps.user.models import User
 from apps.user.forms import LoginForm, UserForm
 from apps.user.mixins import LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin
+from apps.base.utils.request_utils import is_ajax
 
 
 # Create your views here.
@@ -42,35 +43,35 @@ class Logout(LoginRequiredMixin, View):
         return redirect('index')
 
 class UsersList(LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, TemplateView):
-    permission_required = ('user.view_user', 'user.add_user', 'user.change_user', 'user.delete_user')
+    permission_required = ['user.view_user', 'user.add_user', 'user.change_user', 'user.delete_user']
     template_name = 'users_table.html'
 
 class UsersTable(LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, ListView):
-    permission_required = ('user.view_user', 'user.add_user', 'user.change_user', 'user.delete_user')
+    permission_required = ['user.view_user', 'user.add_user', 'user.change_user', 'user.delete_user']
     model = User
 
     def get_queryset(self):
         return self.model.objects.all()
     
     def get_context_data(self, **kwargs):
-        context = {}
+        context = super().get_context_data(**kwargs)
         context['users'] = self.get_queryset()
         return context
 
     def get(self, request, *args, **kwargs):
-        if (request.is_ajax()):
+        if is_ajax(request):
             return HttpResponse(serialize('json', self.get_queryset()), 'application/json')
         else:
             return redirect('user:users_list')
 
 class CreateUser(LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, CreateView):
-    permission_required = 'user.add_user'
+    permission_required = ['user.add_user']
     model = User
     form_class = UserForm
     template_name = 'create_user.html'
 
     def post(self, request, *args, **kwargs):
-        if (request.is_ajax()):
+        if is_ajax(request):
             form = self.form_class(request.POST, request.FILES)
             if (form.is_valid()):
                 new_user = self.model(
@@ -97,13 +98,13 @@ class CreateUser(LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionR
             return redirect('user:users_list')
 
 class UpdateUser(LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, UpdateView):
-    permission_required = 'user.change_user'
+    permission_required = ['user.change_user']
     model = User
     form_class = UserForm
     template_name = 'update_user.html'
 
     def post(self, request, *args, **kwargs):
-        if (request.is_ajax()):
+        if is_ajax(request):
             form = self.form_class(request.POST, request.FILES, instance=self.get_object())
             if (form.is_valid()):
                 form.save()
@@ -122,12 +123,13 @@ class UpdateUser(LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionR
             return redirect('user:users_list')
 
 class DeleteUser(LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, DeleteView):
-    permission_required = 'user.delete_user'
+    permission_required = ['user.delete_user']
     model = User
     template_name = 'delete_user.html'
+    success_url = reverse_lazy('user:users_table')
 
     def delete(self, request, *args, **kwargs):
-        if (request.is_ajax()):
+        if is_ajax(request):
             user = self.get_object()
             user.delete()
             message = f'Successfully {self.model.__name__} elimination.'
