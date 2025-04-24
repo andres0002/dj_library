@@ -164,6 +164,18 @@
         </footer>
         <!-- /.site-footer -->
     </div>
+    <!-- Loader justo antes de cerrar </body> -->
+    <div class="loader-overlay" id="loader">
+        <div class="loader"></div>
+    </div>
+    <!-- Modal de error -->
+    <div id="modal-overlay">
+        <div id="modal">
+            <h2 class="modal-title">Error</h2>
+            <p id="modal-message">Ha ocurrido un error inesperado.</p>
+            <button class="modal-btn-close" onclick="closeErrorModal()">Cerrar</button>
+        </div>
+    </div>
     <!-- /#right-panel -->
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>
@@ -186,18 +198,6 @@
     {% block js_strass %}
     {% endblock js_strass %}
     <!-- end js strass -->
-    <!-- Modal de error -->
-    <div id="modal-overlay">
-        <div id="modal">
-            <h2 class="modal-title">Error</h2>
-            <p id="modal-message">Ha ocurrido un error inesperado.</p>
-            <button class="modal-btn-close" onclick="closeErrorModal()">Cerrar</button>
-        </div>
-    </div>
-    <!-- Loader justo antes de cerrar </body> -->
-    <div class="loader-overlay" id="loader">
-        <div class="loader"></div>
-    </div>
 </body>
 
 </html>
