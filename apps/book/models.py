@@ -9,13 +9,14 @@ from apps.user.models import User
 # Create your models here.
 
 class Author(models.Model):
-    nameAuthor = models.CharField(max_length=150, blank=False, null=False)
-    lastNameAuthor = models.CharField(max_length=150, blank=False, null=False)
-    nationalityAuthor = models.CharField(max_length=100, blank=False, null=False)
-    descriptionAuthor = models.TextField(blank=False, null=False)
-    imageAuthor = models.ImageField(upload_to='book/authors/images/', max_length=255, null=True, blank=True)
-    createDateAuthor = models.DateTimeField(auto_now_add=True)
-    updateDateAuthor = models.DateTimeField(auto_now=True)
+    name = models.CharField(max_length=150, blank=False, null=False)
+    lastname = models.CharField(max_length=150, blank=False, null=False)
+    nationality = models.CharField(max_length=100, blank=False, null=False)
+    description = models.TextField(blank=False, null=False)
+    image = models.ImageField(upload_to='book/authors/images/', max_length=255, null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    create_date = models.DateTimeField(auto_now_add=True)
+    update_date = models.DateTimeField(auto_now=True)
 
     def clean(self):
         """You can add validations here.
@@ -30,46 +31,47 @@ class Author(models.Model):
     class Meta:
         verbose_name = 'Author'
         verbose_name_plural = 'Authors'
-        ordering = ['nameAuthor']
+        ordering = ['name']
 
     def natural_key(self):
-        return f'{self.nameAuthor} {self.lastNameAuthor}'
+        return f'{self.name} {self.lastname}'
 
     def __str__(self):
-        return self.nameAuthor
+        return self.name
 
 class Book(models.Model):
-    titleBook = models.CharField(max_length=150, blank=False, null=False)
-    publicationDateBook = models.DateField(blank=False, null=False)
-    authorId = models.ManyToManyField(Author)
-    descriptionBook = models.TextField(null=True, blank=True)
-    amountBook = models.SmallIntegerField(default=1)
-    imageBook = models.ImageField(upload_to='book/books/images/', max_length=255, null=True, blank=True)
-    createDateBook = models.DateTimeField(auto_now_add=True)
-    updateDateBook = models.DateTimeField(auto_now=True)
+    title = models.CharField(max_length=150, blank=False, null=False)
+    publication_date = models.DateField(blank=False, null=False)
+    author_id = models.ManyToManyField(Author)
+    description = models.TextField(null=True, blank=True)
+    amount = models.SmallIntegerField(default=1)
+    image = models.ImageField(upload_to='book/books/images/', max_length=255, null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    create_date = models.DateTimeField(auto_now_add=True)
+    update_date = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = 'Book'
         verbose_name_plural = 'Books'
-        ordering = ['titleBook']
+        ordering = ['title']
 
     def natural_key(self):
-        return self.titleBook
+        return self.title
 
     def __str__(self):
-        return self.titleBook
+        return self.title
 
-    def get_authorId(self):
-        return ", ".join([str(c) for c in self.authorId.all()])
+    def get_author_id(self):
+        return ", ".join([str(c) for c in self.author_id.all()])
 
 class Reservation(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     amount_days = models.SmallIntegerField(default=7)
+    expiration_date = models.DateTimeField(null=True, blank=True)
     status = models.BooleanField(default=True)
-    createDate = models.DateTimeField(auto_now_add=True)
-    expirationDate = models.DateTimeField(null=True, blank=True)
-    updateDate = models.DateTimeField(auto_now=True)
+    create_date = models.DateTimeField(auto_now_add=True)
+    update_date = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = 'Reservation'
@@ -81,16 +83,16 @@ class Reservation(models.Model):
 
 def reduce_book_amount(sender, instance, **kwargs):
     book = instance.book
-    if (book.amountBook > 0):
-        book.amountBook -= 1
+    if (book.amount > 0):
+        book.amount -= 1
         book.save()
 
 def add_expired_date_reservation(sender, instance, **kwrags):
     book = instance.book
-    if (instance.expirationDate is None):
-        instance.expirationDate = instance.createDate + timedelta(days=instance.amount_days)
+    if (instance.expiration_date is None):
+        instance.expiration_date = instance.create_date + timedelta(days=instance.amount_days)
         instance.save()
-        book.amountBook += 1
+        book.amount += 1
         book.save()
 
 post_save.connect(reduce_book_amount, sender=Reservation)

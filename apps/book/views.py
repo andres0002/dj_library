@@ -226,14 +226,14 @@ class AvailableBooks(LoginRequiredMixin, ListView):
     template_name = 'book/available_books.html'
 
     def get_queryset(self):
-        return self.model.objects.filter(amountBook__gte=1)
+        return self.model.objects.filter(amount__gte=1)
 
 class AvailableBookDetail(LoginRequiredMixin, DetailView):
     model = Book
     template_name = 'book/available_book_detail.html'
 
     def get(self, request, *args, **kwargs):
-        if (self.get_object().amountBook > 0):
+        if (self.get_object().amount > 0):
             return render(request, self.template_name, {'object': self.get_object()})
         return redirect('book:available_books')
 
@@ -247,7 +247,7 @@ class ReservationRegister(LoginRequiredMixin, CreateView):
             user = request.user
             book = Book.objects.filter(id = request.POST.get('book')).first()
             if (user and book):
-                if (book.amountBook > 0):
+                if (book.amount > 0):
                     new_reservation = self.model(
                         book = book,
                         user = user

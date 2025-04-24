@@ -13,8 +13,8 @@ function listBooksReservations(){
                 row += '<td>' + (i + 1) + '</td>';
                 row += '<td>' + response[i]['fields']['book'] + '</td>';
                 row += '<td>' + response[i]['fields']['amount_days'] + '</td>';
-                row += '<td>' + response[i]['fields']['createDate'] + '</td>';
-                row += '<td>' + response[i]['fields']['expirationDate'] + '</td>';
+                row += '<td>' + response[i]['fields']['create_date'] + '</td>';
+                row += '<td>' + response[i]['fields']['expiration_date'] + '</td>';
                 row += '</tr>';
                 $('#books_reservations_table tbody').append(row);
             }

@@ -20,10 +20,10 @@
                     <div class="col-md-4">
                         <a href="{% url 'book:available_book_detail' book.pk %}">
                             <div class="card">
-                                <img src="{{ book.imageBook.url }}" alt="" class="card-img-top">
+                                <img src="{{ book.image.url }}" alt="" class="card-img-top">
                                 <div class="card-body">
-                                    <h4 class="card-title mb-3">{{ book.titleBook }}</h4>
-                                    <p class="card-text">{{ book.descriptionBook }}</p>
+                                    <h4 class="card-title mb-3">{{ book.title }}</h4>
+                                    <p class="card-text">{{ book.description }}</p>
                                 </div>
                             </div>
                         </a>

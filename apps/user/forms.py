@@ -62,16 +62,16 @@ class UserForm(forms.ModelForm):
                 }
             )
         }
-    
-    def clean_password2(self):
+
+    def clean_password2(self): # para validar un campo determinado -> clean_field.
         password1 = self.cleaned_data['password1']
         password2 = self.cleaned_data['password2']
         if (password1 and password2 and password1 != password2):
             raise forms.ValidationError('Passwords not equal.')
         return password2
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
+    def save(self, commit=True): # commit -> que proceda con el registro.
+        user = super().save(commit=False) # para tomar la instancia hasta el momento.
         user.set_password(self.cleaned_data['password2'])
         if (commit):
             user.save()

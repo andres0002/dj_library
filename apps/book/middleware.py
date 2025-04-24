@@ -18,7 +18,7 @@ class ExpiredReservationMiddleware():
             current_date = timezone.now() - timedelta(hours=5)
             reservations = Reservation.objects.filter(status=True, user=request.user)
             for reservation in reservations:
-                expired_date = reservation.createDate + timedelta(days=reservation.amount_days)
+                expired_date = reservation.create_date + timedelta(days=reservation.amount_days)
                 if (current_date > expired_date):
                     reservation.status = False
                     reservation.save()

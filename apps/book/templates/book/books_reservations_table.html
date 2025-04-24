@@ -41,8 +41,8 @@
                     {% for reservation in object_list %}
                         {
                             title: "{{ reservation.book }}",
-                            start: "{{ reservation.createDate | date:'Y-m-d' }}",
-                            end: "{{ reservation.expirationDate | date:'Y-m-d' }}"
+                            start: "{{ reservation.create_date | date:'Y-m-d' }}",
+                            end: "{{ reservation.expiration_date | date:'Y-m-d' }}"
                         },
                     {% endfor %}
                 ]

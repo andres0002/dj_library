@@ -13,13 +13,13 @@ class AuthorResource(resources.ModelResource):
     class Meta:
         model = Author
 class AuthorAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    search_fields = ('nameAuthor', 'lastNameAuthor', 'descriptionAuthor')
-    readonly_fields = ('createDateAuthor', 'updateDateAuthor')
-    list_display = ['nameAuthor', 'lastNameAuthor',
-                    'nationalityAuthor', 'descriptionAuthor',
-                    'createDateAuthor', 'updateDateAuthor'
+    search_fields = ('name', 'lastname', 'description')
+    readonly_fields = ('create_date', 'update_date')
+    list_display = ['name', 'lastname',
+                    'nationality', 'description',
+                    'create_date', 'update_date'
                     ]
-    list_filter = ('nationalityAuthor',)
+    list_filter = ('nationality',)
     resource_class = AuthorResource
 
 class BookResource(resources.ModelResource):
@@ -27,13 +27,13 @@ class BookResource(resources.ModelResource):
         model = Book
 
 class BookAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    search_fields = ('titleBook',)
-    readonly_fields = ('createDateBook', 'updateDateBook')
-    list_display = ['titleBook', 'publicationDateBook',
-                    'get_authorId', 'createDateBook',
-                    'updateDateBook'
+    search_fields = ('title',)
+    readonly_fields = ('create_date', 'update_date')
+    list_display = ['title', 'publication_date',
+                    'get_author_id', 'create_date',
+                    'update_date'
                     ]
-    list_filter = ('publicationDateBook',)
+    list_filter = ('publication_date',)
     resource_class = BookResource
 
 class ReservationResource(resources.ModelResource):
@@ -43,10 +43,10 @@ class ReservationResource(resources.ModelResource):
 class ReservationAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     form = ReservationForm
     search_fields = ('book', 'user')
-    readonly_fields = ('createDate', 'expirationDate', 'updateDate')
-    list_filter = ('book', 'user', 'status', 'createDate', 'expirationDate', 'updateDate')
+    readonly_fields = ('create_date', 'expiration_date', 'update_date')
+    list_filter = ('book', 'user', 'status', 'create_date', 'expiration_date', 'update_date')
     list_display = [
-        'book', 'user', 'amount_days', 'status', 'createDate', 'expirationDate', 'updateDate'
+        'book', 'user', 'amount_days', 'status', 'create_date', 'expiration_date', 'update_date'
     ]
     resource_class = ReservationResource
 

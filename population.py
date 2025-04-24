@@ -47,10 +47,10 @@ def generate_author(count):
         random_description = generate_string(generate_number())
 
         Author.objects.create(
-            nameAuthor = random_name,
-            lastNameAuthor = random_last_name,
-            nationalityAuthor = random_nationality,
-            descriptionAuthor = random_description
+            name = random_name,
+            lastname = random_last_name,
+            nationality = random_nationality,
+            description = random_description
         )
 
 if (__name__ == "__main__"):

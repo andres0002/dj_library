@@ -9,39 +9,39 @@ class AuthorForm(forms.ModelForm):
     class Meta:
         model = Author
         fields = [
-                'nameAuthor',
-                'lastNameAuthor',
-                'nationalityAuthor',
-                'descriptionAuthor',
-                'imageAuthor'
+                'name',
+                'lastname',
+                'nationality',
+                'description',
+                'image'
         ]
         labels = {
-                'nameAuthor': 'Author Name',
-                'lastNameAuthor': 'Author Last Name',
-                'nationalityAuthor': 'Author Nacionality',
-                'descriptionAuthor': 'Author Description',
-                'imageAuthor': 'Author Image'
+                'name': 'Author Name',
+                'lastname': 'Author Last Name',
+                'nationality': 'Author Nacionality',
+                'description': 'Author Description',
+                'image': 'Author Image'
         }
         widgets = {
-            'nameAuthor': forms.TextInput(
+            'name': forms.TextInput(
                 attrs = {
                     'class': 'form-control',
                     'placeholder': 'Add Author Name'
                 }
             ),
-            'lastNameAuthor': forms.TextInput(
+            'lastname': forms.TextInput(
                 attrs = {
                     'class': 'form-control',
                     'placeholder': 'Add Author Last Name'
                 }
             ),
-            'nationalityAuthor': forms.TextInput(
+            'nationality': forms.TextInput(
                 attrs = {
                     'class': 'form-control',
                     'placeholder': 'Add Author Nationality'
                 }
             ),
-            'descriptionAuthor': forms.Textarea(
+            'description': forms.Textarea(
                 attrs = {
                     'class': 'form-control',
                     'placeholder': 'Add Author Description'
@@ -53,49 +53,49 @@ class BookForm(forms.ModelForm):
 
     #def __init__(self, *args, **kwargs):
     #    super().__init__(*args, **kwargs)
-    #    self.fields['authorId'].queryset = Author.objects.filter(statusAuthor=True)
+    #    self.fields['author_id'].queryset = Author.objects.filter(statusAuthor=True)
     class Meta:
         model = Book
         fields = [
-                'titleBook',
-                'publicationDateBook',
-                'authorId',
-                'descriptionBook',
-                'amountBook',
-                'imageBook'
+                'title',
+                'publication_date',
+                'author_id',
+                'description',
+                'amount',
+                'image'
         ]
         labels = {
-            'titleBook': 'Book Title',
-            'publicationDateBook': 'Date of Publication of the Book',
-            'authorId': 'Authors',
-            'descriptionBook': 'Book Description',
-            'amountBook': 'Amount of Books',
-            'imageBook': 'Book Image'
+            'title': 'Book Title',
+            'publication_date': 'Date of Publication of the Book',
+            'author_id': 'Authors',
+            'description': 'Book Description',
+            'amount': 'Amount of Books',
+            'image': 'Book Image'
         }
         widgets = {
-            'titleBook': forms.TextInput(
+            'title': forms.TextInput(
                 attrs = {
                     'class': 'form-control',
                     'placeholder': 'Add Book Title'
                 }
             ),
-            'publicationDateBook': forms.SelectDateWidget(
+            'publication_date': forms.SelectDateWidget(
                 attrs = {
                     'class': 'form-control'
                 }
             ),
-            'authorId': forms.SelectMultiple(
+            'author_id': forms.SelectMultiple(
                 attrs = {
                     'class': 'form-control'
                 }
             ),
-            'descriptionBook': forms.Textarea(
+            'description': forms.Textarea(
                 attrs = {
                     'class': 'form-control',
                     'placeholder': 'Add Book Description'
                 }
             ),
-            'amountBook': forms.NumberInput(
+            'amount': forms.NumberInput(
                 attrs = {
                     'class': 'form-control'
                 }
@@ -113,6 +113,6 @@ class ReservationForm(forms.ModelForm):
 
     def clean_book(self):
         book = self.cleaned_data['book']
-        if (book.amountBook < 1):
+        if (book.amount < 1):
             raise ValidationError('You cannot reservation this book, should exist available units.')
         return book

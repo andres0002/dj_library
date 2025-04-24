@@ -11,11 +11,11 @@ function listBooks(){
             for (let i = 0;i < response.length;i++){
                 let row = '<tr>';
                 row += '<td>' + (i + 1) + '</td>';
-                row += '<td>' + response[i]['fields']['titleBook'] + '</td>';
-                row += '<td>' + response[i]['fields']['publicationDateBook'] + '</td>';
-                row += '<td>' + response[i]['fields']['authorId'] + '</td>';
-                row += '<td>' + response[i]['fields']['createDateBook'] + '</td>';
-                row += '<td>' + response[i]['fields']['updateDateBook'] + '</td>';
+                row += '<td>' + response[i]['fields']['title'] + '</td>';
+                row += '<td>' + response[i]['fields']['publication_date'] + '</td>';
+                row += '<td>' + response[i]['fields']['author_id'] + '</td>';
+                row += '<td>' + response[i]['fields']['create_date'] + '</td>';
+                row += '<td>' + response[i]['fields']['update_date'] + '</td>';
                 row += '<td>';
                 row += '<button class="btn btn-primary"';
                 row += ' onclick="open_modal_edition(\'/book/update_book/' + response[i]['pk'] + '/\');">';

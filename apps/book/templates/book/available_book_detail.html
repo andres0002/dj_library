@@ -18,17 +18,17 @@
             <div class="row">
                 <div class="card">
                     {% csrf_token %}
-                    <img src="{{ object.imageBook.url }}" alt="" class="card-img-top">
+                    <img src="{{ object.image.url }}" alt="" class="card-img-top">
                     <div class="card-body">
                         <div class="row text-center">
                             <div class="col-md-6">
                                 <p class="card-text">
-                                    <strong>Date of Publication of the Book: </strong>{{ object.publicationDateBook }}
+                                    <strong>Date of Publication of the Book: </strong>{{ object.publication_date }}
                                 </p>
                             </div>
                             <div class="col-md-6">
                                 <p class="card-text">
-                                    <strong>Authors: </strong>{{ object.get_authorId }}
+                                    <strong>Authors: </strong>{{ object.get_author_id }}
                                 </p>
                             </div>
                             <div class="col-md-12">
@@ -38,7 +38,7 @@
                             </div>
                             <div class="col-md-12">
                                 <p class="card-text text-center">
-                                    {{ object.descriptionBook }}
+                                    {{ object.description }}
                                 </p>
                             </div>
                         </div>

@@ -11,12 +11,12 @@ function listAuthors(){
             for (let i = 0;i < response.length;i++){
                 let row = '<tr>';
                 row += '<td>' + (i + 1) + '</td>';
-                row += '<td>' + response[i]['fields']['nameAuthor'] + '</td>';
-                row += '<td>' + response[i]['fields']['lastNameAuthor'] + '</td>';
-                row += '<td>' + response[i]['fields']['nationalityAuthor'] + '</td>';
-                row += '<td>' + response[i]['fields']['descriptionAuthor'] + '</td>';
-                row += '<td>' + response[i]['fields']['createDateAuthor'] + '</td>';
-                row += '<td>' + response[i]['fields']['updateDateAuthor'] + '</td>';
+                row += '<td>' + response[i]['fields']['name'] + '</td>';
+                row += '<td>' + response[i]['fields']['lastname'] + '</td>';
+                row += '<td>' + response[i]['fields']['nationality'] + '</td>';
+                row += '<td>' + response[i]['fields']['description'] + '</td>';
+                row += '<td>' + response[i]['fields']['create_date'] + '</td>';
+                row += '<td>' + response[i]['fields']['update_date'] + '</td>';
                 row += '<td>';
                 row += '<button class="btn btn-primary" type="button"';
                 row += ' onclick="open_modal_edition(\'/book/update_author/' + response[i]['pk'] + '/\');">';
