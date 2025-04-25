@@ -130,7 +130,15 @@ function showCreationErrors(errors){
 	let error = '';
 	for (let item in errors.responseJSON.error){
 		error += '<div class="alert alert-danger">';
-		error += '<strong>' + errors.responseJSON.error[item] + '</strong>';
+		error += '<strong>' + (
+			item.toUpperCase() == "PASSWORD1"
+				? 'PASSWORD' :
+				item.toUpperCase() == "PASSWORD2"
+					? 'CONFIRM PASSWORD'
+					: item.toUpperCase() == "AUTHOR_ID"
+						? "AUTHORS"
+						: item.toUpperCase()
+		) + ' (' + errors.responseJSON.error[item] + ')</strong>';
 		error += '</div>';
 	}
 	$('#errors').append(error);
@@ -141,7 +149,15 @@ function showEditionErrors(errors){
 	let error = '';
 	for (let item in errors.responseJSON.error){
 		error += '<div class="alert alert-danger">';
-		error += '<strong>' + errors.responseJSON.error[item] + '</strong>';
+		error += '<strong>' + (
+			item.toUpperCase() == "PASSWORD1"
+				? 'PASSWORD' :
+				item.toUpperCase() == "PASSWORD2"
+					? 'CONFIRM PASSWORD'
+					: item.toUpperCase() == "AUTHOR_ID"
+						? "AUTHORS"
+						: item.toUpperCase()
+		) + ' (' + errors.responseJSON.error[item] + ')</strong>';
 		error += '</div>';
 	}
 	$('#errors_edition').append(error);
