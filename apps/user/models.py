@@ -17,7 +17,8 @@ class UserManager(BaseUserManager):
             is_superuser = is_superuser,
             **stra_fields
         )
-        user.set_password(password)
+        if password not in [None, '']:
+            user.set_password(password)
         user.save(using=self.db)
         return user
 
