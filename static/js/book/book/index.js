@@ -83,19 +83,19 @@ function edition(){
 
 function elimination(pk){
     $.ajax({
-        data: {
-            csrfmiddlewaretoken: $("[name='csrfmiddlewaretoken']").val()
-        },
         url: '/book/delete_book/'+ pk +'/',
-        type: 'post',
+        type: 'delete',
+        headers: {
+            'X-CSRFToken': $("[name='csrfmiddlewaretoken']").val()  // Enviamos el token CSRF en la cabecera
+        },
         success: function(response){
-            successNotification(response.message);
+            successNotification("Successfully Book elimination.");
             listBooks();
             close_modal_elimination();
         },
         error: function(error){
-            errorNotification(error.responseJSON.message);
-        }
+            errorNotification("Errorful Book elimination.");
+        },
     });
 }
 

@@ -126,16 +126,19 @@ class DeleteUser(LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionR
     permission_required = ['user.delete_user']
     model = User
     template_name = 'delete_user.html'
-    success_url = reverse_lazy('user:users_table')
 
     def delete(self, request, *args, **kwargs):
         if is_ajax(request):
             user = self.get_object()
+            # elimination direct.
             user.delete()
+            # logical elimination.
+            # user.is_active = False
+            # user.save()
             message = f'Successfully {self.model.__name__} elimination.'
             error = 'There are no errors.'
             response = JsonResponse({'message':message, 'error':error})
-            response.status_code = 201
+            response.status_code = 204
             return response
         else:
             return redirect('user:users_list')

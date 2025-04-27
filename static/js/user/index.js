@@ -103,19 +103,19 @@ function edition(){
 
 function elimination(pk){
     $.ajax({
-        data: {
-            csrfmiddlewaretoken: $("[name='csrfmiddlewaretoken']").val()
-        },
         url: '/user/delete_user/'+ pk +'/',
-        type: 'post',
+        type: 'delete',
+        headers: {
+            'X-CSRFToken': $("[name='csrfmiddlewaretoken']").val()  // Enviamos el token CSRF en la cabecera
+        },
         success: function(response){
-            successNotification(response.message);
+            successNotification("Successfully User elimination.");
             listUsers();
             close_modal_elimination();
         },
         error: function(error){
-            errorNotification(error.responseJSON.message);
-        }
+            errorNotification("Errorful User elimination.");
+        },
     });
 }
 

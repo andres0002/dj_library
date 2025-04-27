@@ -91,16 +91,19 @@ class DeleteAuthor(LoginRequiredMixin, UserPermissionRequiredMixin, DeleteView):
     permission_required = ['user.delete_author']
     model = Author
     template_name = 'author/delete_author.html'
-    success_url = reverse_lazy('book:authors_table')
 
     def delete(self, request, *args, **kwargs):
         if is_ajax(request):
             author = self.get_object()
+            # elimination direct.
             author.delete()
+            # logical elimination.
+            # author.is_active = False
+            # author.save()
             message = f'Successfully {self.model.__name__} elimination.'
             error = 'There are no errors.'
             response = JsonResponse({'message':message, 'error':error})
-            response.status_code = 201
+            response.status_code = 204
             return response
         else:
             redirect('book:authors_list')
@@ -206,16 +209,19 @@ class DeleteBook(LoginRequiredMixin, UserPermissionRequiredMixin, DeleteView):
     permission_required = ['user.delete_book']
     model = Book
     template_name = 'book/delete_book.html'
-    success_url = reverse_lazy('book:books_table')
 
     def delete(self, request, *args, **kwargs):
         if is_ajax(request):
             book = self.get_object()
+            # elimination direct.
             book.delete()
+            # logical elimination.
+            # book.is_active = False
+            # book.save()
             message = f'Successfully {self.model.__name__} elimination.'
             error = 'There are no errors.'
             response = JsonResponse({'message':message, 'error':error})
-            response.status_code = 201
+            response.status_code = 204
             return response
         else:
             return redirect('book:books_list')
