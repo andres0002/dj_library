@@ -51,22 +51,23 @@ def manage_reservation_delete(sender, instance, **kwargs):
 def reduce_book_amount(sender, instance, **kwargs):
     book = instance.book
     if (book.amount > 0):
-        book.amount -= 1
-        book.save()
+        # book.amount -= 1
+        # book.save() # se recomienda con un update o una bandera, ya que el seve puede causar un signal recursivo (infinito).
+        Book.objects.filter(pk=book.pk).update(amount=book.amount - 1)
 
 # asignation de expiration date si no exist.
 def add_expired_date_reservation(sender, instance, **kwrags):
-    book = instance.book
     if (instance.expiration_date is None):
         instance.expiration_date = instance.create_date + timedelta(days=instance.amount_days)
-        instance.save()
+        # instance.save() # se recomienda con un update o una bandera, ya que el seve puede causar un signal recursivo (infinito).
+        Reservation.objects.filter(pk=instance.pk).update(expiration_date=instance.expiration_date)
 
 # elimination logical del author.
 def delete_relation_author_with_book(sender, instance, **kwargs):
     if not instance.is_active:
         books = Book.objects.filter(author_id=instance.pk)
         for book in books:
-            book.author_id.remove(instance.pk)
+            book.author_id.remove(instance.pk) # el remove no acciona signals.
 
 post_save.connect(reduce_book_amount, sender=Reservation)
 post_save.connect(add_expired_date_reservation, sender=Reservation)
