@@ -1,8 +1,6 @@
 # django
 from django.db import models
-from django.db.models.signals import post_save
 # third
-from datetime import timedelta
 # own
 from apps.user.models import User
 
@@ -44,6 +42,8 @@ class Author(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=150, blank=False, null=False)
     publication_date = models.DateField(blank=False, null=False)
+    # para que tenga author anonymous debe tener blank=True and null=True, eso para si se quiere implementar.
+    # la elimination logical al author.
     author_id = models.ManyToManyField(Author)
     description = models.TextField(null=True, blank=True)
     amount = models.SmallIntegerField(default=1)
@@ -82,20 +82,3 @@ class Reservation(models.Model):
 
     def __str__(self):
         return f'{self.book}'
-
-def reduce_book_amount(sender, instance, **kwargs):
-    book = instance.book
-    if (book.amount > 0):
-        book.amount -= 1
-        book.save()
-
-def add_expired_date_reservation(sender, instance, **kwrags):
-    book = instance.book
-    if (instance.expiration_date is None):
-        instance.expiration_date = instance.create_date + timedelta(days=instance.amount_days)
-        instance.save()
-        book.amount += 1
-        book.save()
-
-post_save.connect(reduce_book_amount, sender=Reservation)
-post_save.connect(add_expired_date_reservation, sender=Reservation)
