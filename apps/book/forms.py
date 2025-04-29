@@ -50,10 +50,10 @@ class AuthorForm(forms.ModelForm):
         }
 
 class BookForm(forms.ModelForm):
-
     #def __init__(self, *args, **kwargs):
     #    super().__init__(*args, **kwargs)
-    #    self.fields['author_id'].queryset = Author.objects.filter(statusAuthor=True)
+    #    self.fields['author_id'].queryset = Author.objects.filter(is_active=True) # para los casos de eliminación logica.
+
     class Meta:
         model = Book
         fields = [
@@ -103,7 +103,6 @@ class BookForm(forms.ModelForm):
         }
 
 class ReservationForm(forms.ModelForm):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

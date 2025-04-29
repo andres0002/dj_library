@@ -18,11 +18,13 @@ class Author(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
 
+    # validations antes de cualquier action.
     def clean(self):
         """You can add validations here.
         """
         pass
 
+    # validations al momento de save.
     def save(self, *args, **kwargs):
         """[You can add validations here.]
         """

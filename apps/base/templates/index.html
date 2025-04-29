@@ -19,8 +19,8 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/loader.css' %}">
     <!-- css strass -->
-    {% block css_strass %}
-    {% endblock css_strass %}
+    {% block css_extra %}
+    {% endblock css_extra %}
     <!-- end css strass -->
 </head>
 
@@ -42,6 +42,8 @@
                             <li><i class="fa fa-list"></i><a href="{% url 'user:users_list' %}">List Users</a></li>
                         </ul>
                     </li>
+                    {% endif %}
+                    {% if request.user.is_staff %}
                     <li class="menu-item-has-children dropdown">
                         <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false"> <i class="menu-icon fa fa-users"></i>Authors</a>
@@ -61,7 +63,7 @@
                     <li class="menu-item-has-children dropdown">
                         <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false"> <i class="menu-icon fa fa-book"></i>
-                            {% if request.user.is_superuser %}
+                            {% if request.user.is_superuser or request.user.is_staff %}
                                 Books Reservation
                             {% else %}
                                 Books
@@ -185,18 +187,29 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="{% static 'js/main.js' %}"></script>
     <script src="{% static 'js/loader.js' %}"></script>
+    <!-- sirve en general para cualquier message que mande django con su sistema de mensajes -->
     <script>
         {% if messages %}
-        var html_message = ''
-        {% for message in messages %}
-        html_message += '{{ message }}'
-        {% endfor %}
-        errorNotification(html_message);
+            let html_message = ''
+            {% for message in messages %}
+                html_message += '{{ message }}'
+                {% if message.tags == 'error' %}
+                    errorNotification("{{ message|escapejs }}");
+                {% elif message.tags == 'success' %}
+                    successNotification("{{ message|escapejs }}");
+                {% elif message.tags == 'info' %}
+                    infoNotification("{{ message|escapejs }}");
+                {% elif message.tags == 'warning' %}
+                    warningNotification("{{ message|escapejs }}");
+                {% else %}
+                    debugNotification("{{ message|escapejs }}");
+                {% endif %}
+            {% endfor %}
         {% endif %}
     </script>
     <!-- js strass -->
-    {% block js_strass %}
-    {% endblock js_strass %}
+    {% block js_extra %}
+    {% endblock js_extra %}
     <!-- end js strass -->
 </body>
 

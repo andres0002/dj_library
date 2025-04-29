@@ -7,7 +7,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 # Create your models here.
 
 class UserManager(BaseUserManager):
-    def _create_user(self, username, email, name, lastname, password, is_staff, is_superuser, **stra_fields):
+    def _create_user(self, username, email, name, lastname, password, is_staff, is_superuser, **extra_fields):
         user = self.model(
             username = username,
             email = email,
@@ -15,18 +15,18 @@ class UserManager(BaseUserManager):
             lastname = lastname,
             is_staff = is_staff,
             is_superuser = is_superuser,
-            **stra_fields
+            **extra_fields
         )
         if password not in [None, '']:
             user.set_password(password)
         user.save(using=self.db)
         return user
 
-    def create_user(self, username, email, name, lastname, password=None, **stra_fields):
-        return self._create_user(username, email, name, lastname, password, False, False, **stra_fields)
+    def create_user(self, username, email, name, lastname, password=None, **extra_fields):
+        return self._create_user(username, email, name, lastname, password, False, False, **extra_fields)
 
-    def create_superuser(self, username, email, name, lastname, password=None, **stra_fields):
-        return self._create_user(username, email, name, lastname, password, True, True, **stra_fields)
+    def create_superuser(self, username, email, name, lastname, password=None, **extra_fields):
+        return self._create_user(username, email, name, lastname, password, True, True, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(unique=True, max_length=100)
@@ -48,3 +48,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.username
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            # Si es una actualización, verificamos si cambió la contraseña
+            old = User.objects.filter(pk=self.pk).first()
+            if old and old.password != self.password:
+                if not self.password.startswith('pbkdf2_sha256$'):
+                    self.set_password(self.password)
+        else:
+            # Usuario nuevo, se asegura que la contraseña esté hasheada
+            if self.password and not self.password.startswith('pbkdf2_sha256$'):
+                self.set_password(self.password)
+        super().save(*args, **kwargs)

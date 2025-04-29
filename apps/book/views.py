@@ -1,7 +1,7 @@
 # django
 from django.shortcuts import render, redirect
 from django.core.serializers import serialize
-from django.contrib.auth.mixins import LoginRequiredMixin
+# from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import TemplateView, ListView, UpdateView, CreateView, DeleteView, DetailView
@@ -9,18 +9,18 @@ from django.views.generic import TemplateView, ListView, UpdateView, CreateView,
 # own
 from apps.book.models import Author, Book, Reservation
 from apps.book.forms import AuthorForm, BookForm
-from apps.user.mixins import UserPermissionRequiredMixin
+from apps.user.mixins import LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin
 from apps.base.utils.request_utils import is_ajax
 
 # Create your views here.
 
 #Lessons of authors.
-class AuthorsList(LoginRequiredMixin, UserPermissionRequiredMixin, TemplateView):
-    permission_required = ['user.view_author', 'user.add_author', 'user.change_author', 'user.delete_author']
+class AuthorsList(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, TemplateView):
+    permission_required = ('user.view_author', 'user.add_author', 'user.change_author', 'user.delete_author')
     template_name = 'author/authors_table.html'
 
-class AuthorsTable(LoginRequiredMixin, UserPermissionRequiredMixin, ListView):
-    permission_required = ['user.view_author', 'user.add_author', 'user.change_author', 'user.delete_author']
+class AuthorsTable(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, ListView):
+    permission_required = ('user.view_author', 'user.add_author', 'user.change_author', 'user.delete_author')
     model = Author
 
     def get_queryset(self):
@@ -37,8 +37,8 @@ class AuthorsTable(LoginRequiredMixin, UserPermissionRequiredMixin, ListView):
         else:
             return redirect('book:authors_list')
 
-class CreateAuthor(LoginRequiredMixin, UserPermissionRequiredMixin, CreateView):
-    permission_required = ['user.add_author']
+class CreateAuthor(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, CreateView):
+    permission_required = ('user.add_author',)
     model = Author
     form_class = AuthorForm
     template_name = 'author/create_author.html'
@@ -62,8 +62,8 @@ class CreateAuthor(LoginRequiredMixin, UserPermissionRequiredMixin, CreateView):
         else:
             return redirect('book:authors_list')
 
-class UpdateAuthor(LoginRequiredMixin, UserPermissionRequiredMixin, UpdateView):
-    permission_required = ['user.change_author']
+class UpdateAuthor(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, UpdateView):
+    permission_required = ('user.change_author',)
     model = Author
     form_class = AuthorForm
     template_name = 'author/update_author.html'
@@ -87,8 +87,8 @@ class UpdateAuthor(LoginRequiredMixin, UserPermissionRequiredMixin, UpdateView):
         else:
             return redirect('book:authors_list')
 
-class DeleteAuthor(LoginRequiredMixin, UserPermissionRequiredMixin, DeleteView):
-    permission_required = ['user.delete_author']
+class DeleteAuthor(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, DeleteView):
+    permission_required = ('user.delete_author',)
     model = Author
     template_name = 'author/delete_author.html'
 
@@ -109,12 +109,12 @@ class DeleteAuthor(LoginRequiredMixin, UserPermissionRequiredMixin, DeleteView):
             redirect('book:authors_list')
 
 #Lessons of Books.
-class BooksList(LoginRequiredMixin, UserPermissionRequiredMixin, TemplateView):
-    permission_required = ['user.view_book', 'user.add_book', 'user.change_book', 'user.delete_book']
+class BooksList(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, TemplateView):
+    permission_required = ('user.view_book', 'user.add_book', 'user.change_book', 'user.delete_book')
     template_name = 'book/books_table.html'
 
-class BooksTable(LoginRequiredMixin, UserPermissionRequiredMixin, ListView):
-    permission_required = ['user.view_book', 'user.add_book', 'user.change_book', 'user.delete_book']
+class BooksTable(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, ListView):
+    permission_required = ('user.view_book', 'user.add_book', 'user.change_book', 'user.delete_book')
     model = Book
 
     def get_queryset(self):
@@ -131,14 +131,14 @@ class BooksTable(LoginRequiredMixin, UserPermissionRequiredMixin, ListView):
         else:
             return redirect('book:books_list')
 
-class BooksReservationsList(LoginRequiredMixin, ListView):
+class BooksReservationsList(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, ListView):
     model = Reservation
     template_name = 'book/books_reservations_table.html'
 
     def get_queryset(self):
         return self.model.objects.filter(status=True, user=self.request.user)
 
-class BooksReservationsTable(LoginRequiredMixin, ListView):
+class BooksReservationsTable(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, ListView):
     model = Reservation
 
     def get_queryset(self):
@@ -155,8 +155,8 @@ class BooksReservationsTable(LoginRequiredMixin, ListView):
         else:
             return redirect('book:books_reservations_list')
 
-class CreateBook(LoginRequiredMixin, UserPermissionRequiredMixin, CreateView):
-    permission_required = ['user.add_book']
+class CreateBook(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, CreateView):
+    permission_required = ('user.add_book',)
     model = Book
     form_class = BookForm
     template_name = 'book/create_book.html'
@@ -180,8 +180,8 @@ class CreateBook(LoginRequiredMixin, UserPermissionRequiredMixin, CreateView):
         else:
             return redirect('book:books_list')
 
-class UpdateBook(LoginRequiredMixin, UserPermissionRequiredMixin, UpdateView):
-    permission_required = ['user.change_book']
+class UpdateBook(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, UpdateView):
+    permission_required = ('user.change_book',)
     model = Book
     form_class = BookForm
     template_name = 'book/update_book.html'
@@ -205,8 +205,8 @@ class UpdateBook(LoginRequiredMixin, UserPermissionRequiredMixin, UpdateView):
         else:
             return redirect('book:books_list')
 
-class DeleteBook(LoginRequiredMixin, UserPermissionRequiredMixin, DeleteView):
-    permission_required = ['user.delete_book']
+class DeleteBook(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, DeleteView):
+    permission_required = ('user.delete_book',)
     model = Book
     template_name = 'book/delete_book.html'
 
@@ -226,7 +226,7 @@ class DeleteBook(LoginRequiredMixin, UserPermissionRequiredMixin, DeleteView):
         else:
             return redirect('book:books_list')
 
-class AvailableBooks(LoginRequiredMixin, ListView):
+class AvailableBooks(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, ListView):
     model = Book
     paginate_by = 6
     template_name = 'book/available_books.html'
@@ -234,7 +234,7 @@ class AvailableBooks(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return self.model.objects.filter(amount__gte=1)
 
-class AvailableBookDetail(LoginRequiredMixin, DetailView):
+class AvailableBookDetail(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, DetailView):
     model = Book
     template_name = 'book/available_book_detail.html'
 
@@ -244,7 +244,7 @@ class AvailableBookDetail(LoginRequiredMixin, DetailView):
         return redirect('book:available_books')
 
 #Lessons of Reservations.
-class ReservationRegister(LoginRequiredMixin, CreateView):
+class ReservationRegister(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, CreateView):
     model = Reservation
     success_url = reverse_lazy('book:available_books')
 
@@ -266,10 +266,10 @@ class ReservationRegister(LoginRequiredMixin, CreateView):
                     return response
         return redirect('book:available_books')
 
-class ExpiredReservationsList(LoginRequiredMixin, TemplateView):
+class ExpiredReservationsList(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, TemplateView):
     template_name = 'book/expired_reservations_table.html'
 
-class ExpiredReservationsTable(LoginRequiredMixin, ListView):
+class ExpiredReservationsTable(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, ListView):
     model = Reservation
 
     def get_queryset(self):

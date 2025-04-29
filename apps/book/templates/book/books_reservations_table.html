@@ -3,10 +3,10 @@
 {% block title %}
     List Books
 {% endblock title %}
-{% block css_strass %}
+{% block css_extra %}
     <link rel="stylesheet" href="{% static 'css/lib/datatable/dataTables.bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'fullcalendar/lib/main.css' %}">
-{% endblock css_strass %}
+{% endblock css_extra %}
 {% block content %}
     <div class="card">
         <div class="card-header">
@@ -23,7 +23,7 @@
         <div id="calendar" class="card" style="padding: 20px;"></div>
     </div>
 {% endblock content %}
-{% block js_strass %}
+{% block js_extra %}
     <script src="{% static 'js/lib/data-table/datatables.min.js' %}"></script>
     <script src="{% static 'js/lib/data-table/dataTables.bootstrap.min.js' %}"></script>
     <script src="{% static 'fullcalendar/lib/main.js' %}"></script>
@@ -51,4 +51,4 @@
             /*calendar.setOption('locale', 'es');*/
         });
     </script>
-{% endblock js_strass %}
+{% endblock js_extra %}

@@ -5,7 +5,7 @@ from django.core.serializers import serialize
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.cache import never_cache
-from django.contrib.auth.mixins import LoginRequiredMixin
+# from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormView
 from django.views.generic import View, TemplateView, ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth import login, logout
@@ -14,7 +14,7 @@ from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 # own
 from apps.user.models import User
 from apps.user.forms import LoginForm, UserForm
-from apps.user.mixins import LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin
+from apps.user.mixins import LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin
 from apps.base.utils.request_utils import is_ajax
 
 
@@ -37,17 +37,17 @@ class Login(FormView):
         login(self.request, form.get_user())
         return super(Login, self).form_valid(form)
 
-class Logout(LoginRequiredMixin, View):
+class Logout(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         logout(request)
         return redirect('index')
 
-class UsersList(LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, TemplateView):
-    permission_required = ['user.view_user', 'user.add_user', 'user.change_user', 'user.delete_user']
+class UsersList(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, TemplateView):
+    permission_required = ('user.view_user', 'user.add_user', 'user.change_user', 'user.delete_user')
     template_name = 'users_table.html'
 
-class UsersTable(LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, ListView):
-    permission_required = ['user.view_user', 'user.add_user', 'user.change_user', 'user.delete_user']
+class UsersTable(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, ListView):
+    permission_required = ('user.view_user', 'user.add_user', 'user.change_user', 'user.delete_user')
     model = User
 
     def get_queryset(self):
@@ -64,8 +64,8 @@ class UsersTable(LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionR
         else:
             return redirect('user:users_list')
 
-class CreateUser(LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, CreateView):
-    permission_required = ['user.add_user']
+class CreateUser(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, CreateView):
+    permission_required = ('user.add_user',)
     model = User
     form_class = UserForm
     template_name = 'create_user.html'
@@ -97,8 +97,8 @@ class CreateUser(LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionR
         else:
             return redirect('user:users_list')
 
-class UpdateUser(LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, UpdateView):
-    permission_required = ['user.change_user']
+class UpdateUser(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, UpdateView):
+    permission_required = ('user.change_user',)
     model = User
     form_class = UserForm
     template_name = 'update_user.html'
@@ -122,8 +122,8 @@ class UpdateUser(LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionR
         else:
             return redirect('user:users_list')
 
-class DeleteUser(LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, DeleteView):
-    permission_required = ['user.delete_user']
+class DeleteUser(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, DeleteView):
+    permission_required = ('user.delete_user',)
     model = User
     template_name = 'delete_user.html'
 

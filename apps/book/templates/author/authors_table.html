@@ -3,9 +3,9 @@
 {% block title %}
     List Authors
 {% endblock title %}
-{% block css_strass %}
+{% block css_extra %}
     <link rel="stylesheet" href="{% static 'css/lib/datatable/dataTables.bootstrap.min.css' %}">
-{% endblock css_strass %}
+{% endblock css_extra %}
 {% block content %}
     <div class="animated fadeIn">
         <div class="row">
@@ -51,8 +51,8 @@
     <div class="modal fade" id="edition" role="dialog"></div>
     <div class="modal fade" id="elimination" role="dialog"></div>
 {% endblock content %}
-{% block js_strass %}
+{% block js_extra %}
     <script src="{% static 'js/lib/data-table/datatables.min.js' %}"></script>
     <script src="{% static 'js/lib/data-table/dataTables.bootstrap.min.js' %}"></script>
     <script src="{% static 'js/book/author/index.js' %}"></script>
-{% endblock js_strass %}
+{% endblock js_extra %}
