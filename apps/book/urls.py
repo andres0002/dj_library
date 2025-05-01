@@ -24,10 +24,13 @@ urlpatterns = [
     path('delete_book/<int:pk>/', DeleteBook.as_view(), name='delete_book'),
     # General views.
     path('available-books/', AvailableBooks.as_view(), name='available_books'),
-    path('books-reservation-list/', BooksReservationsList.as_view(), name='books_reservations_list'),
-    path('expired-reservations-list/', ExpiredReservationsList.as_view(), name='expired_reservations_list'),
-    path('books-reservations-table/', BooksReservationsTable.as_view(), name='books_reservations_table'),
-    path('expired-reservations-table/', ExpiredReservationsTable.as_view(), name='expired_reservations_table'),
     path('avaliable-book-detail/<int:pk>/', AvailableBookDetail.as_view(), name='available_book_detail'),
+    path('books-reservation-list/', BooksReservationsList.as_view(), name='books_reservations_list'),
+    path('books-reservations-table/', BooksReservationsTable.as_view(), name='books_reservations_table'),
+    path('expired-reservations-list/', ExpiredReservationsList.as_view(), name='expired_reservations_list'),
+    path('expired-reservations-table/', ExpiredReservationsTable.as_view(), name='expired_reservations_table'),
     path('book-reservation/', ReservationRegister.as_view(), name='book_reservation')
 ]
+
+# url -> start-end -> El navegador (SEO) las detecta como urls mas amigables.
+# url -> start_end -> El navegador (SEO) las detecta como urls no tan amigables.

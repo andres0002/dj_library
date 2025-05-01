@@ -38,14 +38,17 @@ function listAuthors(){
 
 function register(){
     activeButtonCreation();
-    var data = new FormData($('#form_creation').get(0));
+    let data = new FormData($('#form_creation').get(0)); // para imgs.
 	$.ajax({
+        // url: $('#form_creacion').attr('action'), // sin imgs.
+        // type: $('#form_creacion').attr('method'), // sin imgs.
+        // data: $('#form_creacion').serialize(), // sin imgs.
 		url: $('#form_creation').attr('action'),
 		type: $('#form_creation').attr('method'),
         data: data,
-        cache: false,
-        processData: false,
-        contentType: false,
+        cache: false, // para imgs.
+        processData: false, // para imgs.
+        contentType: false, // para imgs.
 		success: function(response){
             successNotification(response.message);
 			listAuthors();
@@ -61,14 +64,17 @@ function register(){
 
 function edition(){
     activeButtonEdition();
-    var data = new FormData($('#form_edition').get(0));
+    let data = new FormData($('#form_edition').get(0)); // para imgs.
     $.ajax({
+        // url: $('#form_edition').attr('action'), // sin imgs.
+        // type: $('#form_edition').attr('method'), // sin imgs.
+        // data: $('#form_edition').serialize(), // sin imgs.
         url: $('#form_edition').attr('action'),
         type: $('#form_edition').attr('method'),
         data: data,
-        cache: false,
-        processData: false,
-        contentType: false,
+        cache: false, // para imgs.
+        processData: false, // para imgs.
+        contentType: false, // para imgs.
         success: function(response){
             successNotification(response.message);
             listAuthors();

@@ -14,7 +14,7 @@ from apps.base.utils.request_utils import is_ajax
 
 # Create your views here.
 
-#Lessons of authors.
+#Section of Authors.
 class AuthorsList(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, TemplateView):
     permission_required = ('user.view_author', 'user.add_author', 'user.change_author', 'user.delete_author')
     template_name = 'author/authors_table.html'
@@ -108,7 +108,7 @@ class DeleteAuthor(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPer
         else:
             redirect('book:authors_list')
 
-#Lessons of Books.
+#Section of Books.
 class BooksList(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, TemplateView):
     permission_required = ('user.view_book', 'user.add_book', 'user.change_book', 'user.delete_book')
     template_name = 'book/books_table.html'
@@ -130,30 +130,6 @@ class BooksTable(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermi
             return HttpResponse(serialize('json', self.get_queryset(), use_natural_foreign_keys=True), 'application/json')
         else:
             return redirect('book:books_list')
-
-class BooksReservationsList(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, ListView):
-    model = Reservation
-    template_name = 'book/books_reservations_table.html'
-
-    def get_queryset(self):
-        return self.model.objects.filter(status=True, user=self.request.user)
-
-class BooksReservationsTable(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, ListView):
-    model = Reservation
-
-    def get_queryset(self):
-        return self.model.objects.filter(status=True, user=self.request.user)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['books_reservations'] = self.get_queryset()
-        return context
-
-    def get(self, request, *args, **kwargs):
-        if is_ajax(request):
-            return HttpResponse(serialize('json', self.get_queryset(), use_natural_foreign_keys=True), 'application/json')
-        else:
-            return redirect('book:books_reservations_list')
 
 class CreateBook(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, CreateView):
     permission_required = ('user.add_book',)
@@ -226,13 +202,17 @@ class DeleteBook(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermi
         else:
             return redirect('book:books_list')
 
+#Section of Reservations.
 class AvailableBooks(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, ListView):
     model = Book
     paginate_by = 6
     template_name = 'book/available_books.html'
 
     def get_queryset(self):
-        return self.model.objects.filter(amount__gte=1)
+        # greater than -> gt -> mayor que.
+        # less than -> lt -> menor que.
+        # less than -> lte -> menor igual que.
+        return self.model.objects.filter(amount__gte=1) # greater than -> gte -> mayor igual que.
 
 class AvailableBookDetail(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, DetailView):
     model = Book
@@ -243,7 +223,6 @@ class AvailableBookDetail(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, 
             return render(request, self.template_name, {'object': self.get_object()})
         return redirect('book:available_books')
 
-#Lessons of Reservations.
 class ReservationRegister(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, CreateView):
     model = Reservation
     success_url = reverse_lazy('book:available_books')
@@ -265,6 +244,30 @@ class ReservationRegister(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, 
                     response.status_code = 201
                     return response
         return redirect('book:available_books')
+
+class BooksReservationsList(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, ListView):
+    model = Reservation
+    template_name = 'book/books_reservations_table.html'
+
+    def get_queryset(self):
+        return self.model.objects.filter(status=True, user=self.request.user)
+
+class BooksReservationsTable(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, ListView):
+    model = Reservation
+
+    def get_queryset(self):
+        return self.model.objects.filter(status=True, user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['books_reservations'] = self.get_queryset()
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if is_ajax(request):
+            return HttpResponse(serialize('json', self.get_queryset(), use_natural_foreign_keys=True), 'application/json')
+        else:
+            return redirect('book:books_reservations_list')
 
 class ExpiredReservationsList(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, TemplateView):
     template_name = 'book/expired_reservations_table.html'

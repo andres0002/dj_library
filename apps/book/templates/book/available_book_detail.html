@@ -14,12 +14,13 @@
                 </div>
             </div>
         </div>
-        <div class="container text-center">
+        <br>
+        <div class="container">
             <div class="row">
-                <div class="card">
+                <div class="card col-md-12" style="box-shadow: 0 0 20px #000;">
                     {% csrf_token %}
                     <img src="{{ object.image.url }}" alt="" class="card-img-top">
-                    <div class="card-body">
+                    <div class="card-body" style="border-top: 1px solid #666;">
                         <div class="row text-center">
                             <div class="col-md-6">
                                 <p class="card-text">
@@ -32,31 +33,34 @@
                                 </p>
                             </div>
                             <div class="col-md-12">
-                                <p class="card-text text-center">
+                                <p class="card-text">
                                     <strong>Book Description</strong>
                                 </p>
                             </div>
                             <div class="col-md-12">
-                                <p class="card-text text-center">
+                                <p class="card-text">
                                     {{ object.description }}
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <button type="button" class="btn btn-primary btn-lg" onclick="reservationRegister();">
-                        Book Reservation
-                    </button>
-                </div>
             </div>
         </div>
+        <div class="container text-center">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-primary btn-lg" onclick="reservationRegister();">
+                    Book Reservation
+                </button>
+            </div>
+        </div>
+        <br>
     </div>
 {% endblock content %}
 {% block js_extra %}
     <script type="text/javascript">
         function reservationRegister(){
-            var data = {
+            let data = {
                 'user': "{{ request.user.id }}",
                 'book': "{{ object.id }}",
                 csrfmiddlewaretoken: $("[name='csrfmiddlewaretoken']").val()
