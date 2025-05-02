@@ -1,17 +1,25 @@
 # py
 from datetime import timedelta
 # django
-from django.db.models.signals import post_save, post_delete, Signal
+from django.db.models.signals import post_save, post_delete, Signal, pre_save
 from django.dispatch import receiver
+from django.core.exceptions import ValidationError
 # third
 # own
 from apps.book.models import Author, Book, Reservation
 from apps.base.utils.signals import prevent_signal_recursion
 
 # 1. forma de implementa los signals with el decorator @reciver(signal,sender=model).
+@receiver(pre_save, sender=Reservation)
+@prevent_signal_recursion # para evitar recursion infinita de signals.
+def manage_reservation_pre_seve(sender, instance, **kwargs): # para evitar que en el admin de django se ejecute la action si no hay books disponibles.
+    book = instance.book
+    if book.amount < 1:
+        raise ValidationError('You cannot reservation this book, should exist available units.')
+
 @receiver(post_save, sender=Reservation)
 @prevent_signal_recursion # para evitar recursion infinita de signals.
-def manage_reservation_seve(sender, instance, created, **kwargs):
+def manage_reservation_post_seve(sender, instance, created, **kwargs):
     # creation
     if created:
         # reducir el stock del book.
@@ -30,9 +38,16 @@ def manage_reservation_seve(sender, instance, created, **kwargs):
             book = instance.book
             Book.objects.filter(pk=book.pk).update(amount=book.amount + 1)
 
+# elimination direct.
+@receiver(post_delete, sender=Reservation)
+@prevent_signal_recursion # para evitar recursion infinita de signals.
+def manage_reservation_post_delete(sender, instance, **kwargs):
+    book = instance.book
+    Book.objects.filter(pk=book.pk).update(amount=book.amount + 1)
+
 @receiver(post_save, sender=Author)
 @prevent_signal_recursion # para evitar recursion infinita de signals.
-def manage_author_save(sender, instance, created, **kwargs):
+def manage_author_post_save(sender, instance, created, **kwargs):
     # creation.
     if created:
         print("Author created")
@@ -42,13 +57,6 @@ def manage_author_save(sender, instance, created, **kwargs):
             books = Book.objects.filter(author_id=instance.pk)
             for book in books:
                 book.author_id.remove(instance.pk)
-
-# elimination direct.
-@receiver(post_delete, sender=Reservation)
-@prevent_signal_recursion # para evitar recursion infinita de signals.
-def manage_reservation_delete(sender, instance, **kwargs):
-    book = instance.book
-    Book.objects.filter(pk=book.pk).update(amount=book.amount + 1)
 
 # 2. forma de implementar los signals with signal.connect(function, sender=model).
 # reducir el amount si se reserva un book.
@@ -76,8 +84,8 @@ def delete_relation_author_with_book(sender, instance, **kwargs):
         for book in books:
             book.author_id.remove(instance.pk) # el remove no acciona signals.
 
-post_save.connect(reduce_book_amount, sender=Reservation)
-post_save.connect(add_expired_date_reservation, sender=Reservation)
+# post_save.connect(reduce_book_amount, sender=Reservation)
+# post_save.connect(add_expired_date_reservation, sender=Reservation)
 post_save.connect(delete_relation_author_with_book, sender=Author)
 
 # signals custom.
