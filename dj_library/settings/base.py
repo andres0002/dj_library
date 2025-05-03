@@ -11,10 +11,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -110,14 +109,84 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (BASE_DIR, 'static')
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Media (Imgs, Files, etc)
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, '../media')
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# logs
+
+# DEBUG: Mensajes detallados, generalmente útiles para la depuración.
+
+# INFO: Mensajes informativos sobre el funcionamiento normal de la aplicación.
+
+# WARNING: Mensajes que indican situaciones inusuales pero no críticas.
+
+# ERROR: Mensajes que indican errores que afectan a la funcionalidad.
+
+# CRITICAL: Errores graves que probablemente causen la falla de la aplicación.
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+
+    'formatters': {
+        'verbose': {
+            'format': '[{levelname}] {asctime} {name} | {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+            'level': 'DEBUG', # Captura todos los niveles de log, incluyendo DEBUG
+        },
+        'file_middleware': {
+            'level': 'DEBUG', # Captura todos los niveles de log, incluyendo DEBUG
+            'class': 'logging.FileHandler',
+            # Usamos str() para convertir la ruta de Path a una cadena
+            'filename': str(BASE_DIR / 'logs' / 'middleware.log'),
+            'formatter': 'verbose',
+        },
+        # 'file_django': {
+        #     'level': 'DEBUG',  # Captura todos los niveles de log para Django
+        #     'class': 'logging.FileHandler',
+        #     'filename': str(BASE_DIR / 'logs' / 'django.log'),
+        #     'formatter': 'verbose',
+        # },
+    },
+
+    'loggers': {
+        # Logger para el middleware
+        'apps.book.middleware': {
+            'handlers': ['console', 'file_middleware'],
+            'level': 'DEBUG', # Captura todos los niveles de log para este logger
+            'propagate': False, # evita que el log se propague a loggers de nivel superior (evita mensajes duplicados).
+        },
+        # Logger global de Django para capturar los logs de otras partes de la aplicación
+        # 'django': {
+        #     'handlers': ['console', 'file_django'],
+        #     'level': 'DEBUG',  # Captura todos los niveles de log para todo Django
+        #     'propagate': True,  # Permite que los logs se propaguen a loggers superiores (por ejemplo, root logger)
+        # },
+        # # Logger para el ORM de Django (consultas a la base de datos)
+        # 'django.db.backends': {
+        #     'handlers': ['console', 'file_django'],
+        #     'level': 'DEBUG',  # Captura todas las consultas SQL generadas por el ORM
+        #     'propagate': False, # evita que el log se propague a loggers de nivel superior (evita mensajes duplicados).
+        # },
+    }
+}

@@ -1,9 +1,13 @@
+# py
+import logging
 # django
 from django.utils import timezone
 # third
 from datetime import timedelta
 # own
 from apps.book.models import Reservation
+
+logger = logging.getLogger('apps.book.middleware')
 
 class ExpiredReservationMiddleware:
     # is required.
@@ -43,4 +47,14 @@ class ExpiredReservationMiddleware:
                 expiration_date__lt=current_date
             )
             # Desactivarlas de una vez
-            expired_reservations.update(status=False)
+            updated_count = expired_reservations.update(status=False)
+            # Registramos cuántos registros se actualizaron en el .log
+            if updated_count > 0:
+                logger.info(f'{updated_count} reservas expiradas para el usuario {request.user.username}.')
+        
+        # Ejemplo de diferentes niveles de log
+        # logger.debug('Este es un mensaje DEBUG')
+        # logger.info('Este es un mensaje INFO')
+        # logger.warning('Este es un mensaje WARNING')
+        # logger.error('Este es un mensaje ERROR')
+        # logger.critical('Este es un mensaje CRITICAL')
