@@ -1,0 +1,142 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %}
+    Add Authors
+{% endblock title %}
+{% block css_extra %}
+    <link rel="stylesheet" href="{% static 'css/lib/datatable/dataTables.bootstrap.min.css' %}">
+{% endblock css_extra %}
+{% block content %}
+    <div class="card" style="box-shadow: 0 0 10px #444;">
+        <div class="card-header text-center">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2><strong>Creation Authors with Formset</strong></h2>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <form id="id_authorForm" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <!-- {{ form.as_p }} -->
+                {{ formset.management_form }}
+                {% for form in formset %}
+                    <div class="card" style="padding: 20px; box-shadow: 0 0 10px #444;">
+                        {{ form }}
+                    </div>
+                {% endfor %}
+                <div id="id_btns-forms" class="text-center">
+                    <button type="submit" class="btn btn-primary">Register</button>
+                    <a class="btn btn-danger" href="{% url 'book:authors_list' %}">Cancel</a>
+                </div>
+            </form>
+        </div>
+        <div class="text-center">
+            <button type="button" class="btn btn-primary" onclick="addFormAuthor()">Add Form Author</button>
+            <button type="button" class="btn btn-danger" onclick="deleteFormAuthor()">Delete Form Author</button>
+        </div>
+        <br>
+        <div class="card-footer">
+            <div class="text-center">
+                <strong>Forms -> <span id="id_FormTOTALFORMSSpan"></span></strong>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block js_extra %}
+    <script>
+        // newAuthorForm.
+        const createAuthorCard = (id) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.style.padding = '20px';
+            card.style.boxShadow = '0 0 10px #444';
+
+            const fields = [
+                { label: 'Author Name:', type: 'text', name: 'name', placeholder: 'Add Author Name', maxlength: 150 },
+                { label: 'Author Last Name:', type: 'text', name: 'lastname', placeholder: 'Add Author Last Name', maxlength: 150 },
+                { label: 'Author Nacionality:', type: 'text', name: 'nationality', placeholder: 'Add Author Nationality', maxlength: 100 },
+                { label: 'Author Description:', type: 'textarea', name: 'description', placeholder: 'Add Author Description' },
+                { label: 'Author Image:', type: 'file', name: 'image', accept: 'image/*' }
+            ];
+
+            fields.forEach(field => {
+                const div = document.createElement('div');
+
+                const inputId = `id_form-${id}-${field.name}`;
+                const label = document.createElement('label');
+                label.setAttribute('for', inputId);
+                label.textContent = field.label;
+
+                let input;
+                if (field.type === 'textarea') {
+                    input = document.createElement('textarea');
+                    input.cols = 40;
+                    input.rows = 10;
+                } else {
+                    input = document.createElement('input');
+                    input.type = field.type;
+                    if (field.maxlength) input.maxLength = field.maxlength;
+                    if (field.accept) input.accept = field.accept;
+                }
+
+                input.name = `form-${id}-${field.name}`;
+                input.id = inputId;
+                if (field.type === 'file') {} else {
+                    input.className = 'form-control';
+                }
+                if (field.placeholder) input.placeholder = field.placeholder;
+
+                div.appendChild(label);
+                div.appendChild(input);
+                card.appendChild(div);
+            });
+
+            return card;
+        }
+        // createBtnsForm
+        const createFormButtons = () => {
+            const container = document.createElement('div');
+            container.id = 'id_btns-forms';
+            container.className = 'text-center';
+
+            const submitButton = document.createElement('button');
+            submitButton.type = 'submit';
+            submitButton.className = 'btn btn-primary';
+            submitButton.textContent = 'Register';
+            submitButton.style.marginRight = '5px';
+
+            const cancelLink = document.createElement('a');
+            cancelLink.className = 'btn btn-danger';
+            cancelLink.href = "{% url 'book:authors_list' %}";  // Esto es para uso en Django templates
+            cancelLink.textContent = 'Cancel';
+
+            container.appendChild(submitButton);
+            container.appendChild(cancelLink);
+
+            return container;
+        }
+        // ids.
+        const idAuthorForm = document.getElementById('id_authorForm');
+        const id_form_TOTAL_FORMS = document.getElementById('id_form-TOTAL_FORMS');
+        const idFormTOTALFORMSSpan = document.getElementById('id_FormTOTALFORMSSpan');
+        // logical.
+        idFormTOTALFORMSSpan.innerText = id_form_TOTAL_FORMS.value;
+        const addFormAuthor = () => {
+            idAuthorForm.lastElementChild.remove(); // delete btnsForm.
+            idAuthorForm.appendChild(createAuthorCard(parseInt(id_form_TOTAL_FORMS.value))); // add newAuthorForm.
+            idAuthorForm.appendChild(createFormButtons()); // add btnsForm.
+            id_form_TOTAL_FORMS.value = parseInt(id_form_TOTAL_FORMS.value) + 1;
+            idFormTOTALFORMSSpan.innerText = id_form_TOTAL_FORMS.value;
+        }
+        const deleteFormAuthor = () => {
+            if (parseInt(id_form_TOTAL_FORMS.value) > 1) {
+                idAuthorForm.lastElementChild.remove(); // delete btnsForm.
+                idAuthorForm.lastElementChild.remove(); // delete lastAuthorForm.
+                idAuthorForm.appendChild(createFormButtons()); // add btnsForm.
+                id_form_TOTAL_FORMS.value = parseInt(id_form_TOTAL_FORMS.value) - 1;
+                idFormTOTALFORMSSpan.innerText = id_form_TOTAL_FORMS.value;
+            }
+        }
+    </script>
+{% endblock js_extra %}

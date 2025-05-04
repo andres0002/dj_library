@@ -14,6 +14,9 @@
                     <div class="card-header text-center">
                         <strong class="card-title">Authors List</strong>
                         <div style="float: right;">
+                            <a class="btn btn-success" href="{% url 'book:create_author_formset' %}">
+                                <i class="fa fa-plus-square"></i> Add Authors</a>
+                            </a>
                             <button class="btn btn-success" onclick="open_modal_creation('{% url 'book:create_author' %}');">
                                 <i class="fa fa-plus-square"></i> Add Author</a>
                             </button>

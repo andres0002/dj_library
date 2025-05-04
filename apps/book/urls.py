@@ -8,6 +8,7 @@ from apps.book.views import (
     AvailableBooks, BooksReservationsList, ExpiredReservationsList,
     BooksReservationsTable, ExpiredReservationsTable, AvailableBookDetail, ReservationRegister
 )
+from apps.book.formsets import AuthorFormset
 
 urlpatterns = [
     # Author views.
@@ -29,8 +30,10 @@ urlpatterns = [
     path('books-reservations-table/', BooksReservationsTable.as_view(), name='books_reservations_table'),
     path('expired-reservations-list/', ExpiredReservationsList.as_view(), name='expired_reservations_list'),
     path('expired-reservations-table/', ExpiredReservationsTable.as_view(), name='expired_reservations_table'),
-    path('book-reservation/', ReservationRegister.as_view(), name='book_reservation')
+    path('book-reservation/', ReservationRegister.as_view(), name='book_reservation'),
+    # Formsets
+    path('create_author_formset/', AuthorFormset.as_view(), name='create_author_formset')
 ]
 
-# url -> start-end -> El navegador (SEO) las detecta como urls mas amigables.
-# url -> start_end -> El navegador (SEO) las detecta como urls no tan amigables.
+# url -> 'start-end' -> El navegador (SEO) las detecta como urls mas amigables.
+# url -> 'start_end' -> El navegador (SEO) las detecta como urls no tan amigables.
