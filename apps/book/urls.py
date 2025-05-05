@@ -19,7 +19,7 @@ urlpatterns = [
     path('create_author/', CreateAuthor.as_view(), name='create_author'),
     path('update_author/<int:pk>/', UpdateAuthor.as_view(), name='update_author'),
     path('delete_author/<int:pk>/', DeleteAuthor.as_view(), name='delete_author'),
-    # Authors view Serve Side In DateTable.
+    # Author views Serve Side In DateTable.
     path('authors_list_serve_side_in_datetable/', AuthorsListServerSideInDataTable.as_view(), name='authors_list_serve_side_in_datetable'),
     path('authors_table_serve_side_in_datetable/', AuthorsTableServerSideInDataTable.as_view(), name='authors_table_serve_side_in_datetable'),
     path('create_author_serve_side_in_datetable/', CreateAuthorServerSideInDataTable.as_view(), name='create_author_serve_side_in_datetable'),
