@@ -6,7 +6,9 @@ from apps.book.views import (
     AuthorsList, AuthorsTable, CreateAuthor, UpdateAuthor, DeleteAuthor,
     BooksList, BooksTable, CreateBook, UpdateBook, DeleteBook,
     AvailableBooks, BooksReservationsList, ExpiredReservationsList,
-    BooksReservationsTable, ExpiredReservationsTable, AvailableBookDetail, ReservationRegister
+    BooksReservationsTable, ExpiredReservationsTable, AvailableBookDetail, ReservationRegister,
+    AuthorsListServerSideInDataTable, AuthorsTableServerSideInDataTable, CreateAuthorServerSideInDataTable,
+    UpdateAuthorServerSideInDataTable, DeleteAuthorServerSideInDataTable
 )
 from apps.book.formsets import AuthorFormset
 
@@ -17,6 +19,12 @@ urlpatterns = [
     path('create_author/', CreateAuthor.as_view(), name='create_author'),
     path('update_author/<int:pk>/', UpdateAuthor.as_view(), name='update_author'),
     path('delete_author/<int:pk>/', DeleteAuthor.as_view(), name='delete_author'),
+    # Authors view Serve Side In DateTable.
+    path('authors_list_serve_side_in_datetable/', AuthorsListServerSideInDataTable.as_view(), name='authors_list_serve_side_in_datetable'),
+    path('authors_table_serve_side_in_datetable/', AuthorsTableServerSideInDataTable.as_view(), name='authors_table_serve_side_in_datetable'),
+    path('create_author_serve_side_in_datetable/', CreateAuthorServerSideInDataTable.as_view(), name='create_author_serve_side_in_datetable'),
+    path('update_author_serve_side_in_datetable/<int:pk>/', UpdateAuthorServerSideInDataTable.as_view(), name='update_author_serve_side_in_datetable'),
+    path('delete_author_serve_side_in_datetable/<int:pk>/', DeleteAuthorServerSideInDataTable.as_view(), name='delete_author_serve_side_in_datetable'),
     # Book views.
     path('books_list/', BooksList.as_view(), name='books_list'),
     path('books_table/', BooksTable.as_view(), name='books_table'),

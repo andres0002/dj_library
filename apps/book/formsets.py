@@ -11,7 +11,7 @@ from apps.book.forms import AuthorForm
 class AuthorFormset(FormView):
     template_name = 'author/author_formset.html'
     form_class = formset_factory(AuthorForm, extra=1)
-    success_url = reverse_lazy('book:authors_list')
+    success_url = reverse_lazy('book:authors_list_serve_side_in_datetable')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

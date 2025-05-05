@@ -1,6 +1,10 @@
+# py
+from time import time
+import json
 # django
 from django.shortcuts import render, redirect
 from django.core.serializers import serialize
+from django.db.models import Q
 # from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.http import HttpResponse, JsonResponse
@@ -107,6 +111,145 @@ class DeleteAuthor(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPer
             return response
         else:
             redirect('book:authors_list')
+
+# Server Side In DataTable
+class AuthorsListServerSideInDataTable(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, TemplateView):
+    permission_required = ('user.view_author', 'user.add_author', 'user.change_author', 'user.delete_author')
+    template_name = 'author/authors_table_serve_side_in_datatable.html'
+
+class AuthorsTableServerSideInDataTable(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, ListView):
+    permission_required = ('user.view_author', 'user.add_author', 'user.change_author', 'user.delete_author')
+    model = Author
+
+    def get_queryset(self):
+        search = self.request.GET.get('search','').strip() # obtiene el value del search y quita espacios al start and end del string.
+        # , si tiene '-name' al inicio del campo se ordena de forma descendente y si no 'name' de forma ascendente.
+        order = self.request.GET.get('order', '').strip() # obtiene la columna por la que se quiere ordenar la table.
+        # Reemplazo del campo ficticio "#" por el campo real "id".
+        if '#' in order:
+            order = order.replace('#', 'id')
+        queryset = self.model.objects.filter(is_active=True) # obtiene solo los authors que no se han eliminado de forma logical.
+        if search: # aplica filter si search is != ''.
+            queryset = queryset.filter( # filtra si cualquier campo coincide.
+                Q(name__icontains=search) |
+                Q(lastname__icontains=search) |
+                Q(description__icontains=search) |
+                Q(nationality__icontains=search)
+            )
+        if order == '':
+            queryset = queryset.values( # solo me trae estos campos.
+                'id',
+                'name',
+                'lastname',
+                'description',
+                'nationality',
+                # 'create_date',
+                # 'update_date'
+            ).distinct()
+        else:
+            queryset = queryset.values( # solo me trae estos campos.
+                'id',
+                'name',
+                'lastname',
+                'description',
+                'nationality',
+                # 'create_date',
+                # 'update_date'
+            ).distinct().order_by(order)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['authors'] = self.get_queryset()
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if is_ajax(request):
+            start = int(request.GET.get('start'))
+            limit = int(request.GET.get('limit'))
+            data = self.get_queryset()
+            data_list = []
+            for index, author in enumerate(data[start:start+limit],start):
+                author['#'] = index + 1
+                data_list.append(author)
+            data = {
+                "length": data.count(),
+                "objects": data_list
+            }
+            return HttpResponse(json.dumps(data), 'application/json')
+        else:
+            return redirect('book:authors_list_serve_side_in_datetable')
+
+class CreateAuthorServerSideInDataTable(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, CreateView):
+    permission_required = ('user.add_author',)
+    model = Author
+    form_class = AuthorForm
+    template_name = 'author/create_author_serve_side_in_datatable.html'
+
+    def post(self, request, *args, **kwargs):
+        if is_ajax(request):
+            form = self.form_class(request.POST, request.FILES)
+            if (form.is_valid()):
+                form.save()
+                message = f'Successfully {self.model.__name__} registered.'
+                error = 'There are no errors.'
+                response = JsonResponse({'message':message, 'error':error})
+                response.status_code = 201
+                return response
+            else:
+                message = f'Errorful {self.model.__name__} register.'
+                error = form.errors
+                response = JsonResponse({'message':message, 'error':error})
+                response.status_code = 400
+                return response
+        else:
+            return redirect('book:authors_list_serve_side_in_datetable')
+
+class UpdateAuthorServerSideInDataTable(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, UpdateView):
+    permission_required = ('user.change_author',)
+    model = Author
+    form_class = AuthorForm
+    template_name = 'author/update_author_serve_side_in_datatable.html'
+
+    def post(self, request, *args, **kwargs):
+        if is_ajax(request):
+            form = self.form_class(request.POST, request.FILES, instance=self.get_object())
+            if (form.is_valid()):
+                form.save()
+                message = f'Successfully {self.model.__name__} updation.'
+                error = 'There are no errors.'
+                response = JsonResponse({'message':message, 'error':error})
+                response.status_code = 201
+                return response
+            else:
+                message = f'Errorful {self.model.__name__} updation.'
+                error = form.errors
+                response = JsonResponse({'message':message, 'error':error})
+                response.status_code = 400
+                return response
+        else:
+            return redirect('book:authors_list_serve_side_in_datetable')
+
+class DeleteAuthorServerSideInDataTable(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, DeleteView):
+    permission_required = ('user.delete_author',)
+    model = Author
+    template_name = 'author/delete_author.html'
+
+    def delete(self, request, *args, **kwargs):
+        if is_ajax(request):
+            author = self.get_object()
+            # elimination direct.
+            author.delete()
+            # logical elimination.
+            # author.is_active = False
+            # author.save()
+            message = f'Successfully {self.model.__name__} elimination.'
+            error = 'There are no errors.'
+            response = JsonResponse({'message':message, 'error':error})
+            response.status_code = 204
+            return response
+        else:
+            redirect('book:authors_list_serve_side_in_datetable')
 
 #Section of Books.
 class BooksList(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, TemplateView):

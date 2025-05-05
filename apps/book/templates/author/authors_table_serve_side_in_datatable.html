@@ -14,7 +14,10 @@
                     <div class="card-header text-center">
                         <strong class="card-title">Authors List</strong>
                         <div style="float: right;">
-                            <button class="btn btn-success" onclick="open_modal_creation('{% url 'book:create_author' %}');">
+                            <a class="btn btn-success" href="{% url 'book:create_author_formset' %}">
+                                <i class="fa fa-plus-square"></i> Add Authors</a>
+                            </a>
+                            <button class="btn btn-success" onclick="open_modal_creation('{% url 'book:create_author_serve_side_in_datetable' %}');">
                                 <i class="fa fa-plus-square"></i> Add Author</a>
                             </button>
                         </div>
@@ -31,8 +34,8 @@
                                                 <th>LastName</th>
                                                 <th>Nationality</th>
                                                 <th>Description</th>
-                                                <th>CreateDate</th>
-                                                <th>UpdateDate</th>
+                                                <!-- <th>CreateDate</th>
+                                                <th>UpdateDate</th> -->
                                                 <th>Options</th>
                                             </tr>
                                         </thead>
@@ -54,5 +57,5 @@
 {% block js_extra %}
     <script src="{% static 'js/lib/data-table/datatables.min.js' %}"></script>
     <script src="{% static 'js/lib/data-table/dataTables.bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/book/author/index.js' %}"></script>
+    <script src="{% static 'js/book/author/index_serve_side_in_datatable.js' %}"></script>
 {% endblock js_extra %}

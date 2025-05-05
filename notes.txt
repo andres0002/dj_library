@@ -16,3 +16,33 @@ if is_ajax(request):
 Second form of return json with Django.
 if is_ajax(request):
     return HttpResponse(serialize('json', self.get_queryset()), 'application/json')
+
+Formas de creation registers maxivos:
+# 1. Metodo.
+for author in authors:
+    Author(**author).save() # 1 seve(), 2 create(). # mas de una ves en DB, si ejecuta signals.
+
+# 2. Metodo.
+for author in authors:
+    Author.objcts.create(**author) # mas de una ves en DB, si ejecuta signals.
+
+# 3. Metodo -> forma mas optima de hacer registros maxivos.
+authors_list = []
+for author in authors:
+    authors_list.append(Author(**author))
+Author.objects.bulk_create(authors_list) # solo una ves en DB, no ejecuta signals.
+
+Formas de updation registers maxivos:
+# 1. Metodo.
+for author in authors:
+    author.description = 'Description update...'
+    author.save() # 1 seve(), 2 create(). # mas de una ves en DB, si ejecuta signals.
+
+# 2. Metodo.
+# este caso es para cuando se quiere updation el mismo campo para all los registers.
+Author.objects.all().update(description='Description update...') # mas de una ves en DB, no ejecuta signals.
+
+# 3. Metodo -> forma mas optima de hacer updation a los registers maxivos.
+for author in authors:
+    author.description = 'Description update...'
+Author.objects.bulk_update(authors,['description']) # solo una ves en DB, no ejecuta signals.

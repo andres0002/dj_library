@@ -1,0 +1,23 @@
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="card-header text-center">
+                <strong class="card-title">Add Author</strong>
+                <button class="close" type="button" data-dismiss="modal" aria-label="close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+        <form id="form_creation" action="{% url 'book:create_author_serve_side_in_datetable' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="modal-body">
+                <div id="errors"></div>
+                {{ form.as_p }}
+            </div>
+            <div class="modal-footer">
+                <button id="button_creation" class="btn btn-primary" type="button" onclick="register();">Confirm</button>
+                <button class="btn btn-danger" type="button" data-dismiss="modal">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

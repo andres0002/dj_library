@@ -27,7 +27,7 @@
                 {% endfor %}
                 <div id="id_btns-forms" class="text-center">
                     <button type="submit" class="btn btn-primary">Register</button>
-                    <a class="btn btn-danger" href="{% url 'book:authors_list' %}">Cancel</a>
+                    <a class="btn btn-danger" href="{% url 'book:authors_list_serve_side_in_datetable' %}">Cancel</a>
                 </div>
             </form>
         </div>
@@ -108,7 +108,7 @@
 
             const cancelLink = document.createElement('a');
             cancelLink.className = 'btn btn-danger';
-            cancelLink.href = "{% url 'book:authors_list' %}";  // Esto es para uso en Django templates
+            cancelLink.href = "{% url 'book:authors_list_serve_side_in_datetable' %}";  // Esto es para uso en Django templates
             cancelLink.textContent = 'Cancel';
 
             container.appendChild(submitButton);
