@@ -50,7 +50,8 @@ def manage_reservation_post_delete(sender, instance, **kwargs):
 def manage_author_post_save(sender, instance, created, **kwargs):
     # creation.
     if created:
-        print("Author created")
+        pass
+        # print("Author created")
     # updation.
     else:
         if not instance.is_active:

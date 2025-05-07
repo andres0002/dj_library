@@ -1,0 +1,38 @@
+# ----------------------------------------
+# Dependencias principales del proyecto
+# ----------------------------------------
+
+Django==5.2                  # Framework web principal
+pillow==11.1.0               # Soporte para imágenes (usado por Django en uploads)
+python-decouple==3.8         # Manejo de variables de entorno
+sqlparse==0.5.3              # Requerido por Django para parseo de SQL
+tzdata==2025.2               # Zona horaria, útil en sistemas sin soporte de zona horaria del sistema
+
+# ----------------------------------------
+# Extensiones y utilidades para Django
+# ----------------------------------------
+
+django-dynamic-fixture==4.0.1    # Generador de datos dinámicos para pruebas en modelos Django
+django-extensions==4.1           # Herramientas de desarrollo adicionales para Django
+django-import-export==4.3.7      # Importación/exportación de datos desde el admin
+tablib==3.8.0                    # Backend para django-import-export
+asgiref==3.8.1                   # Parte del stack ASGI, requerido por Django
+
+# ----------------------------------------
+# Dependencias de desarrollo
+# ----------------------------------------
+
+pytest==8.3.5                # Framework de pruebas
+pytest-django==4.11.1        # Soporte de pytest para proyectos Django
+iniconfig==2.1.0             # Manejo de archivos .ini (usado por pytest)
+pluggy==1.5.0                # Sistema de plugins de pytest
+colorama==0.4.6              # Soporte de colores en consola (útil en Windows)
+factory_boy==3.3.3           # Utilizado para generar datos de prueba en los tests
+
+# ----------------------------------------
+# Otros paquetes
+# ----------------------------------------
+
+Faker==37.1.0                # Generador de datos falsos, útil para pruebas
+diff-match-patch==20241021  # Algoritmo para comparar texto (no típico en Django, revisar si es necesario)
+packaging==25.0              # Utilidad para manejo de versiones y paquetes

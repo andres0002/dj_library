@@ -1,3 +1,4 @@
+-------------------------------------------------------------return json with django--------------------------------------------------------------------------
 Firt form of return json with Django.
 if is_ajax(request):
     list_user = []
@@ -17,6 +18,8 @@ Second form of return json with Django.
 if is_ajax(request):
     return HttpResponse(serialize('json', self.get_queryset()), 'application/json')
 
+
+-------------------------------------------------------------optimizar registers maxivos--------------------------------------------------------------------------
 Formas de creation registers maxivos:
 # 1. Metodo.
 for author in authors:
@@ -46,3 +49,22 @@ Author.objects.all().update(description='Description update...') # mas de una ve
 for author in authors:
     author.description = 'Description update...'
 Author.objects.bulk_update(authors,['description']) # solo una ves en DB, no ejecuta signals.
+
+-------------------------------------------------------------optimizar querysets--------------------------------------------------------------------------
+Select related - Select related:
+# select related -> para optimizar las llamadas a la DB en cuanto a los campos (OneToOneField and ForeignKey) con INNER JOIN.
+print(Reservation.objects.select_related('book', 'user').all().query)
+reservations = Reservation.objects.select_related('book', 'user').all()
+for reservation in reservations:
+    print(reservation.book.title)
+    print(reservation.user.username)
+
+# prefetch related -> para optimizar las llamadas a la DB en cuanto a los campos (ManyToManyField).
+print(Book.objects.prefetch_related('author_id').all().query)
+print('------------------------------------------------------------------------------------------------------------------------------------')
+books = Book.objects.prefetch_related('author_id').all()
+for book in books:
+    for author in book.author_id.all():
+        print(book.author_id.all().query)
+        print(author.name)
+print('------------------------------------------------------------------------------------------------------------------------------------')
