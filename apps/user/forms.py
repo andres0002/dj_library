@@ -89,3 +89,26 @@ class UserForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+class PasswordChangeForm(forms.Form):
+    password1 = forms.CharField(label = 'Add New Password:', widget=forms.PasswordInput())
+    password1.widget.attrs['class'] = 'form-control'
+    password1.widget.attrs['placeholder'] = 'Add your new password.'
+    password1.widget.attrs['required'] = 'required'
+    password2 = forms.CharField(
+        label = 'Confirm New Password:',
+        widget = forms.PasswordInput(
+            attrs = {
+                'class': 'form-control',
+                'placeholder': 'Confirm your new password.',
+                'required': 'required'
+            }
+        )
+    )
+    
+    def clean_password2(self): # para validar un campo determinado -> clean_field.
+        password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
+        if (password1 and password2 and password1 != password2):
+            raise forms.ValidationError('Passwords not equal.')
+        return password2

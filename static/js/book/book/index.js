@@ -13,10 +13,10 @@ function listBooks(){
                 row += '<td>' + (i + 1) + '</td>';
                 row += '<td>' + response[i]['fields']['title'] + '</td>';
                 row += '<td>' + response[i]['fields']['publication_date'] + '</td>';
-                if (response[i]['fields']['author_id'] == '') {
+                if (response[i]['fields']['authors'] == '') {
                     row += '<td>Anonymous</td>';
                 } else {
-                    row += '<td>' + response[i]['fields']['author_id'] + '</td>';
+                    row += '<td>' + response[i]['fields']['authors'] + '</td>';
                 }
                 row += '<td>' + response[i]['fields']['create_date'] + '</td>';
                 row += '<td>' + response[i]['fields']['update_date'] + '</td>';

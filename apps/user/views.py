@@ -1,5 +1,5 @@
 # django
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.core.serializers import serialize
 from django.utils.decorators import method_decorator
@@ -13,7 +13,7 @@ from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 # third
 # own
 from apps.user.models import User
-from apps.user.forms import LoginForm, UserForm
+from apps.user.forms import LoginForm, UserForm, PasswordChangeForm
 from apps.user.mixins import LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin
 from apps.base.utils.request_utils import is_ajax
 
@@ -142,3 +142,22 @@ class DeleteUser(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, UserPermi
             return response
         else:
             return redirect('user:users_list')
+
+class PasswordChange(LoginUserIssuperuserOrIsstaffOrIsactiveRequiredMixin, View):
+    template_name = 'password_change.html'
+    form_class = PasswordChangeForm
+    success_url = reverse_lazy('index')
+    
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {'form': self.form_class})
+    
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            user = User.objects.filter(pk=request.user.pk).first()
+            user.set_password(form.cleaned_data.get('password1'))
+            user.save()
+            logout(request)
+            return redirect(self.success_url)
+        else:
+            return render(request, self.template_name, {'form': form})

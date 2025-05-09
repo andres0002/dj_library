@@ -135,7 +135,7 @@ function showCreationErrors(errors){
 				? 'PASSWORD' :
 				item.toUpperCase() == "PASSWORD2"
 					? 'CONFIRM PASSWORD'
-					: item.toUpperCase() == "AUTHOR_ID"
+					: item.toUpperCase() == "AUTHORS"
 						? "AUTHORS"
 						: item.toUpperCase()
 		) + ' (' + errors.responseJSON.error[item] + ')</strong>';
@@ -154,7 +154,7 @@ function showEditionErrors(errors){
 				? 'PASSWORD' :
 				item.toUpperCase() == "PASSWORD2"
 					? 'CONFIRM PASSWORD'
-					: item.toUpperCase() == "AUTHOR_ID"
+					: item.toUpperCase() == "AUTHORS"
 						? "AUTHORS"
 						: item.toUpperCase()
 		) + ' (' + errors.responseJSON.error[item] + ')</strong>';

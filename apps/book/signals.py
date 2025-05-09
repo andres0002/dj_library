@@ -55,9 +55,9 @@ def manage_author_post_save(sender, instance, created, **kwargs):
     # updation.
     else:
         if not instance.is_active:
-            books = Book.objects.filter(author_id=instance.pk)
+            books = Book.objects.filter(authors=instance.pk)
             for book in books:
-                book.author_id.remove(instance.pk)
+                book.authors.remove(instance.pk)
 
 # 2. forma de implementar los signals with signal.connect(function, sender=model).
 # reducir el amount si se reserva un book.
@@ -81,9 +81,9 @@ def add_expired_date_reservation(sender, instance, **kwrags):
 @prevent_signal_recursion # para evitar recursion infinita de signals.
 def delete_relation_author_with_book(sender, instance, **kwargs):
     if not instance.is_active:
-        books = Book.objects.filter(author_id=instance.pk)
+        books = Book.objects.filter(authors=instance.pk)
         for book in books:
-            book.author_id.remove(instance.pk) # el remove no acciona signals.
+            book.authors.remove(instance.pk) # el remove no acciona signals.
 
 # post_save.connect(reduce_book_amount, sender=Reservation)
 # post_save.connect(add_expired_date_reservation, sender=Reservation)

@@ -79,7 +79,7 @@ class BookAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     search_fields = ('title',)
     readonly_fields = ('create_date', 'update_date')
     list_display = ['title', 'publication_date',
-                    'get_author_id', 'create_date',
+                    'get_authors', 'create_date',
                     'update_date'
                     ]
     list_filter = ('publication_date',)

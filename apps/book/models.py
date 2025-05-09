@@ -44,7 +44,7 @@ class Book(models.Model):
     publication_date = models.DateField(blank=False, null=False)
     # para que tenga author anonymous debe tener blank=True and null=True, eso para si se quiere implementar.
     # la elimination logical al author.
-    author_id = models.ManyToManyField(Author)
+    authors = models.ManyToManyField(Author)
     description = models.TextField(null=True, blank=True)
     amount = models.SmallIntegerField(default=1)
     image = models.ImageField(upload_to='book/books/images/', max_length=255, null=True, blank=True)
@@ -63,8 +63,8 @@ class Book(models.Model):
     def __str__(self):
         return self.title
 
-    def get_author_id(self):
-        return ", ".join([str(c) for c in self.author_id.all()])
+    def get_authors(self):
+        return ", ".join([str(c) for c in self.authors.all()])
 
 class Reservation(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)

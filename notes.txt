@@ -60,11 +60,11 @@ for reservation in reservations:
     print(reservation.user.username)
 
 # prefetch related -> para optimizar las llamadas a la DB en cuanto a los campos (ManyToManyField).
-print(Book.objects.prefetch_related('author_id').all().query)
+print(Book.objects.prefetch_related('authors').all().query)
 print('------------------------------------------------------------------------------------------------------------------------------------')
-books = Book.objects.prefetch_related('author_id').all()
+books = Book.objects.prefetch_related('authors').all()
 for book in books:
-    for author in book.author_id.all():
-        print(book.author_id.all().query)
+    for author in book.authors.all():
+        print(book.authors.all().query)
         print(author.name)
 print('------------------------------------------------------------------------------------------------------------------------------------')

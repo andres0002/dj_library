@@ -29,14 +29,14 @@ def test_reservation_creation_fail_with_django_dynamic_fixture_with_F(common_res
 # ---------------------------django dynamic fixture F ManyToMany---------------------------
 @pytest.fixture
 def common_book_creation():
-    # return G(Book, author_id=2) # forma uno sin F.
+    # return G(Book, authors=2) # forma uno sin F.
     author = G(Author)
-    return G(Book, author_id=[F(name='Author 1'), F(name='Author 2'), author]) # forma dos with F.
+    return G(Book, authors=[F(name='Author 1'), F(name='Author 2'), author]) # forma dos with F.
 
 # @pytest.mark.django_db
 # def test_book_creation_with_django_dynamic_fixture(common_book_creation): # para usar fixture.
 #     common_book_creation.save()
-#     # print(common_book_creation.author_id.all())
+#     # print(common_book_creation.authors.all())
 #     assert common_book_creation.title
 
 # @pytest.mark.django_db

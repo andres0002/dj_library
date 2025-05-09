@@ -52,14 +52,14 @@ class AuthorForm(forms.ModelForm):
 class BookForm(forms.ModelForm):
     #def __init__(self, *args, **kwargs):
     #    super().__init__(*args, **kwargs)
-    #    self.fields['author_id'].queryset = Author.objects.filter(is_active=True) # para los casos de eliminación logica.
+    #    self.fields['authors'].queryset = Author.objects.filter(is_active=True) # para los casos de eliminación logica.
 
     class Meta:
         model = Book
         fields = [
                 'title',
                 'publication_date',
-                'author_id',
+                'authors',
                 'description',
                 'amount',
                 'image'
@@ -67,7 +67,7 @@ class BookForm(forms.ModelForm):
         labels = {
             'title': 'Book Title',
             'publication_date': 'Date of Publication of the Book',
-            'author_id': 'Authors',
+            'authors': 'Authors',
             'description': 'Book Description',
             'amount': 'Amount of Books',
             'image': 'Book Image'
@@ -84,7 +84,7 @@ class BookForm(forms.ModelForm):
                     'class': 'form-control'
                 }
             ),
-            'author_id': forms.SelectMultiple(
+            'authors': forms.SelectMultiple(
                 attrs = {
                     'class': 'form-control'
                 }
